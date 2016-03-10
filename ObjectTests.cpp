@@ -121,6 +121,7 @@ void initScene()
 }
 
 float sunAngle = 45.0f;
+
 void renderScene3D() {
 	// Get Shader attributes' locations
 	int projectionMatrixLocation = Shader::shader->getUniformLocation("projectionMatrix");

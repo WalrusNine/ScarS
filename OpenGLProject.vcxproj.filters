@@ -135,4 +135,12 @@
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="data\shaders\shader.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="data\shaders\shader.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
 </Project>

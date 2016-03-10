@@ -10,6 +10,8 @@
 #include <string>
 #include <vector>
 
+#include <iostream>
+
 VertexBufferObject Model::vbo;
 GLuint Model::vao;
 std::vector<Texture> Model::textures;
@@ -89,10 +91,12 @@ bool Model::LoadModelFromFile(char* filepath) {
 				aiVector3D uv = mesh->mTextureCoords[0][face.mIndices[k]];
 				aiVector3D normal = mesh->HasNormals() ? mesh->mNormals[face.mIndices[k]] : aiVector3D(1.0f, 1.0f, 1.0f);
 				aiColor4D diffuse; aiGetMaterialColor(scene->mMaterials[mesh->mMaterialIndex], AI_MATKEY_COLOR_DIFFUSE, &diffuse);
+				//aiColor4D specular; aiGetMaterialColor(scene->mMaterials[mesh->mMaterialIndex], AI_MATKEY_COLOR_SPECULAR, &specular);
 				vbo.addData(&pos, sizeof(aiVector3D));
 				vbo.addData(&uv, sizeof(aiVector2D));
 				vbo.addData(&normal, sizeof(aiVector3D));
 				vbo.addData(&diffuse, sizeof(aiColor4D));
+				//vbo.addData(&specular, sizeof(aiColor4D));
 			}
 		}
 		int meshVertices = mesh->mNumVertices;
@@ -133,6 +137,17 @@ bool Model::LoadModelFromFile(char* filepath) {
 				textures.push_back(tNew);
 			}
 		}
+		aiString matName;
+		material->Get(AI_MATKEY_NAME, matName);
+		if (matName == aiString("Glass")) {
+			printf("Glass!");
+			for (int l = 0; l < material->mNumProperties; l++) {
+				std::cout << material->mProperties[l]->mKey.C_Str() << std::endl;
+			}
+			
+		}
+		//material->Get(AI_MATKEY_COLOR_TRANSPARENT, );
+		//AI_MATKEY_COLOR_TRANSPARENT AI_MATKEY_OPACITY
 	}
 
 	// Fix index
@@ -175,10 +190,14 @@ void Model::FinalizeVBO()
 	loc = Shader::shader->getAttribLocation("a_normal");
 	glEnableVertexAttribArray(loc);
 	glVertexAttribPointer(loc, 3, GL_FLOAT, GL_FALSE, vertexTotalSize, (void*)(sizeof(aiVector3D) + sizeof(aiVector2D)));
-	// Color
+	// Diffuse Color
 	loc = Shader::shader->getAttribLocation("a_color");
 	glEnableVertexAttribArray(loc);
 	glVertexAttribPointer(loc, 4, GL_FLOAT, GL_FALSE, vertexTotalSize, (void*)(2 * sizeof(aiVector3D) + sizeof(aiVector2D)));
+	// Specular Color
+	//loc = Shader::shader->getAttribLocation("a_spec");
+	//glEnableVertexAttribArray(loc);
+	//glVertexAttribPointer(loc, 4, GL_FLOAT, GL_FALSE, vertexTotalSize, (void*)(2 * sizeof(aiVector3D) + sizeof(aiVector2D) + sizeof(aiColor4D)));
 }
 
 /*-----------------------------------------------
@@ -215,6 +234,7 @@ Model* Model::createGeometry(Geometry g, Texture * t, std::string name)
 	aiVector2D uv;
 	aiVector3D normal = aiVector3D(1.0f, 1.0f, 1.0f);
 	aiColor4D diffuse(1, 1, 1, 1);
+	aiColor4D specular(1, 1, 1, 1);
 	int n = 0;
 
 	int sizeBefore = vbo.getCurrentSize();
@@ -235,6 +255,7 @@ Model* Model::createGeometry(Geometry g, Texture * t, std::string name)
 		vbo.addData(&uv, sizeof(aiVector2D));
 		vbo.addData(&normal, sizeof(aiVector3D));
 		vbo.addData(&diffuse, sizeof(aiColor4D));
+		//vbo.addData(&specular, sizeof(aiColor4D));
 
 		pos = aiVector3D(1.0f, 0, -1.0f);
 		uv = aiVector2D(1.0f, 1.0f) * 100.0f;
@@ -242,6 +263,7 @@ Model* Model::createGeometry(Geometry g, Texture * t, std::string name)
 		vbo.addData(&uv, sizeof(aiVector2D));
 		vbo.addData(&normal, sizeof(aiVector3D));
 		vbo.addData(&diffuse, sizeof(aiColor4D));
+		//vbo.addData(&specular, sizeof(aiColor4D));
 
 		pos = aiVector3D(1.0f, 0, 1.0f);
 		uv = aiVector2D(1.0f, 0) * 100.0f;
@@ -249,6 +271,7 @@ Model* Model::createGeometry(Geometry g, Texture * t, std::string name)
 		vbo.addData(&uv, sizeof(aiVector2D));
 		vbo.addData(&normal, sizeof(aiVector3D));
 		vbo.addData(&diffuse, sizeof(aiColor4D));
+		//vbo.addData(&specular, sizeof(aiColor4D));
 
 		// Second half
 		pos = aiVector3D(1.0f, 0, 1.0f);
@@ -257,6 +280,7 @@ Model* Model::createGeometry(Geometry g, Texture * t, std::string name)
 		vbo.addData(&uv, sizeof(aiVector2D));
 		vbo.addData(&normal, sizeof(aiVector3D));
 		vbo.addData(&diffuse, sizeof(aiColor4D));
+		//vbo.addData(&specular, sizeof(aiColor4D));
 
 		pos = aiVector3D(-1.0f, 0, 1.0f);
 		uv = aiVector2D(0, 0) * 100.0f;
@@ -264,6 +288,7 @@ Model* Model::createGeometry(Geometry g, Texture * t, std::string name)
 		vbo.addData(&uv, sizeof(aiVector2D));
 		vbo.addData(&normal, sizeof(aiVector3D));
 		vbo.addData(&diffuse, sizeof(aiColor4D));
+		//vbo.addData(&specular, sizeof(aiColor4D));
 
 		pos = aiVector3D(-1.0f, 0, -1.0f);
 		uv = aiVector2D(0, 1.0f) * 100.0f;
@@ -271,6 +296,7 @@ Model* Model::createGeometry(Geometry g, Texture * t, std::string name)
 		vbo.addData(&uv, sizeof(aiVector2D));
 		vbo.addData(&normal, sizeof(aiVector3D));
 		vbo.addData(&diffuse, sizeof(aiColor4D));
+		//vbo.addData(&specular, sizeof(aiColor4D));
 	}
 	model->meshSizes.push_back((vbo.getCurrentSize() - sizeBefore) / vertexTotalSize);
 
@@ -369,10 +395,12 @@ Model * Model::createSkybox(std::string dir, std::vector<std::string> filenames,
 			aiVector2D uv = vSkyBoxTexCoords[j];
 			aiVector3D normal = vSkyBoxNormals[i];
 			aiColor4D diffuse(1, 1, 1, 1);
+			aiColor4D specular(1, 1, 1, 1);
 			vbo.addData(&pos, sizeof(aiVector3D));
 			vbo.addData(&uv, sizeof(aiVector2D));
 			vbo.addData(&normal, sizeof(aiVector3D));
 			vbo.addData(&diffuse, sizeof(aiColor4D));
+			//vbo.addData(&specular, sizeof(aiColor4D));
 		}
 		int meshVertices = 4;
 		totalVertices += meshVertices;
