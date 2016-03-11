@@ -30,4 +30,6 @@ private:
 
 	vec3 rightSpotLightRelativePosition;
 	vec3 leftSpotLightRelativePosition;
+
+	float distance;
 };

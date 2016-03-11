@@ -37,7 +37,7 @@ void SpotLight::setUniformData(std::string name) {
 	loc = Shader::shader->getUniformLocation(name + "_spotlight.coneAngle");
 	glUniform1fv(loc, 1, (GLfloat*)&coneAngle);
 
-	coneCosine = float(cos(coneAngle*3.1415f / 180.0f));
+	coneCosine = float(cos(coneAngle* (3.1415f / 180.0f)));
 	loc = Shader::shader->getUniformLocation(name + "_spotlight.coneCosine");
 	glUniform1fv(loc, 1, (GLfloat*)&coneCosine);
 

@@ -18,7 +18,7 @@ Camera::Camera() : GameObject::GameObject() {
 	horizontalAngle = 3.14f;
 	verticalAngle = 0.0f;
 	fov = 45.0f;
-	speed = 3.0f;
+	speed = 100.0f;
 	zoomSpeed = 6.0f;
 
 	attachedGameObject = nullptr;
@@ -69,7 +69,7 @@ void Camera::update() {
 		// Get distance between camera and attached object
 		zoom = glm::distance(attachedGameObject->position, position);
 		// Move camera around the car
-		position = attachedGameObject->position + zoom * vec3(cos(horizontalAngle), 1, sin(horizontalAngle));
+		position = attachedGameObject->position + zoom * vec3(cos(glm::radians(horizontalAngle)), 1, sin(glm::radians(horizontalAngle)));
 	}
 
 	calculateMatrices();

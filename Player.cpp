@@ -19,21 +19,25 @@ Player::Player() {
 
 	// Set spotlights
 	rightSpotLightRelativePosition = vec3(0.65f, 0.6f, -1.4f);
-	leftSpotLightRelativePosition = vec3(-0.65f, 0.6f, -1.4f);
+	leftSpotLightRelativePosition = vec3(-0.65f, 0.f, -1.4f);
+
+	distance = glm::distance(position, position + leftSpotLightRelativePosition);
+	//distance = 1;
 
 	leftSpotLight = new SpotLight(	vec3(1.0f, 1.0f, 1.0f),
 									position + leftSpotLightRelativePosition,
-									normalize(direction * 75.0f),
+									normalize(-direction),
 									1,
 									15.0f,
 									0.017f );
 	rightSpotLight = new SpotLight(	vec3(1.0f, 1.0f, 1.0f),
 									position + rightSpotLightRelativePosition,
 									direction,
-									1,
+									0,
 									15.0f,
 									0.017f);
 }
+
 
 void Player::update() {
 	float deltaTime = FPSController::getDeltaTime();
@@ -70,8 +74,16 @@ void Player::update() {
 	// Rotate in Y Axis
 	rotation.y = steerAngle;
 
+	//leftSpotLight->position = position + leftSpotLightRelativePosition;
+		vec3 dir = glm::normalize(leftSpotLight->position - position);
+		leftSpotLight->position = position + distance * dir;
+		//distance = glm::distance(leftSpotLight->position, position);
+
 	leftSpotLight->direction = normalize(-direction);
-	leftSpotLight->position = position + leftSpotLightRelativePosition;
+		//leftSpotLight->position = position + leftSpotLightRelativePosition;
+		leftSpotLight->position = position + distance * vec3(cos(glm::radians(steerAngle)), 0, sin(glm::radians(steerAngle)));
+
+
 
 	rightSpotLight->direction = normalize(-direction);
 	rightSpotLight->position = position + rightSpotLightRelativePosition;
