@@ -104,3 +104,16 @@ void Camera::attachGameObject(GameObject* go, vec3 relativePosition) {
 	minZoom = 15.0f;
 	maxZoom = 5.0f;
 }
+
+vec3 Camera::getDirection() {
+	return direction;
+}
+
+vec3 Camera::getUp()
+{
+	return up;
+}
+
+vec3 Camera::getViewVector() {
+	return position + direction;
+}

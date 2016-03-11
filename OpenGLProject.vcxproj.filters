@@ -78,6 +78,9 @@
     <ClCompile Include="Sun.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SpotLight.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ObjectTests.h">
@@ -134,12 +137,18 @@
     <ClInclude Include="Sun.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="SpotLight.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="data\shaders\shader.frag">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="data\shaders\shader.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="data\shaders\spotlight.frag">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

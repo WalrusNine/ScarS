@@ -137,17 +137,6 @@ bool Model::LoadModelFromFile(char* filepath) {
 				textures.push_back(tNew);
 			}
 		}
-		aiString matName;
-		material->Get(AI_MATKEY_NAME, matName);
-		if (matName == aiString("Glass")) {
-			printf("Glass!");
-			for (int l = 0; l < material->mNumProperties; l++) {
-				std::cout << material->mProperties[l]->mKey.C_Str() << std::endl;
-			}
-			
-		}
-		//material->Get(AI_MATKEY_COLOR_TRANSPARENT, );
-		//AI_MATKEY_COLOR_TRANSPARENT AI_MATKEY_OPACITY
 	}
 
 	// Fix index

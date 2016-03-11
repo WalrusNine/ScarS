@@ -21,6 +21,7 @@
 #include "Player.h"
 #include "GUI.h"
 #include "FreeTypeFont.h"
+#include "SpotLight.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -29,13 +30,14 @@
 std::vector<GameObject*> gameObjects;
 GUI* gui;
 //FreeTypeFont* ftf;
+//SpotLight* sl;
 
 void TestSetup3D() {
 	// Create Camera
-	/*Camera::mainCamera = Camera::createCamera();
-	gameObjects.push_back((GameObject*)Camera::mainCamera);*/
-	SkyCamera::mainCamera = SkyCamera::createCamera();
-	gameObjects.push_back((GameObject*)SkyCamera::mainCamera);
+	Camera::mainCamera = Camera::createCamera();
+	gameObjects.push_back((GameObject*)Camera::mainCamera);
+	/*SkyCamera::mainCamera = SkyCamera::createCamera();
+	gameObjects.push_back((GameObject*)SkyCamera::mainCamera);*/
 
 	// Create Textures
 	Texture::addTexture(Texture::createTexture("data\\textures\\golddiag.jpg", TEXTURE_FILTER_MAG_BILINEAR, TEXTURE_FILTER_MIN_BILINEAR_MIPMAP, "golddiag", true));
@@ -101,8 +103,8 @@ void TestSetup3D() {
 	gameObjects.push_back(ground);
 
 	// Player
-	//GameObject* player = new Player();
-	//gameObjects.push_back(player);
+	GameObject* player = new Player();
+	gameObjects.push_back(player);
 
 	// GUI
 	gui = new GUI();
@@ -111,7 +113,8 @@ void TestSetup3D() {
 	//ftf = new FreeTypeFont();
 	//ftf->loadSystemFont("comic.ttf", 32);
 
-	// Sun
+	// Flashlight
+	//sl = new SpotLight(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1, 15.0f, 0.017f);
 
 }
 
@@ -120,7 +123,7 @@ void initScene()
 	TestSetup3D();
 }
 
-float sunAngle = 45.0f;
+float sunAngle = 90.0f;
 
 void renderScene3D() {
 	// Get Shader attributes' locations
@@ -144,11 +147,28 @@ void renderScene3D() {
 	loc = Shader::shader->getUniformLocation("sunlight.color");
 	glUniform3fv(loc, 1, &glm::vec3(1.0f, 1.0f, 1.0f)[0]);
 	loc = Shader::shader->getUniformLocation("sunlight.ambient_intensity");
-	float ambientIntensity = 1.0f;
+	float ambientIntensity = 0.5f;
 	glUniform1fv(loc, 1, &ambientIntensity);
 	loc = Shader::shader->getUniformLocation("sunlight.direction");
 	vec3 norm = -glm::normalize(sunPos);
 	glUniform3fv(loc, 1, &norm[0]);
+
+	// Spotlight
+	/*glm::vec3 vSpotLightPos = Camera::mainCamera->getPosition();
+	glm::vec3 vCameraDir = Camera::mainCamera->getDirection();
+	// Move down a little
+	vSpotLightPos.y -= 3.2f;
+	// Find direction of spotlight
+	glm::vec3 vSpotLightDir = (vSpotLightPos + vCameraDir*75.0f) - vSpotLightPos;
+	vSpotLightDir = glm::normalize(vSpotLightDir);
+	// Find vector of horizontal offset
+	glm::vec3 vHorVector = glm::cross(Camera::mainCamera->getViewVector() - Camera::mainCamera->getPosition(), Camera::mainCamera->getUp());
+	vSpotLightPos += vHorVector*3.3f;
+	// Set it
+	sl->position = vSpotLightPos;
+	sl->direction = vSpotLightDir;
+
+	sl->setUniformData("spotLight");*/
 
 	// AssImp
 	Model::BindModelsVAO();

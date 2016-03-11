@@ -42,7 +42,6 @@ void SkyCamera::update() {
 }
 
 void SkyCamera::calculateMatrices() {
-	vec3 up;
 	// Direction : Spherical coordinates to Cartesian coordinates conversion
 	direction = vec3(
 		cos(verticalAngle) * sin(horizontalAngle),

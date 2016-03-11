@@ -15,6 +15,9 @@ public:
 	mat4 getViewMatrix();
 	mat4 getProjectionMatrix();
 	vec3 getPosition();
+	vec3 getDirection();
+	vec3 getUp();
+	vec3 getViewVector();
 
 	static Camera* createCamera();
 	static Camera* mainCamera;
@@ -31,6 +34,7 @@ protected:
 	// Vectors
 	vec3 direction;
 	vec3 right;
+	vec3 up;
 
 	// Turn angle
 	float horizontalAngle;

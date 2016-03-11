@@ -14,6 +14,23 @@ Player::Player() {
 	attachedCamera = Camera::mainCamera;
 	cameraRelativePosition = vec3(0, 0, 10);
 	attachedCamera->attachGameObject(this, cameraRelativePosition);
+
+	// Set spotlights
+	rightSpotLightRelativePosition = vec3(2, 0, -5);
+	leftSpotLightRelativePosition = vec3(-0.6f, 0.5f,-1.1f);
+
+	leftSpotLight = new SpotLight(	vec3(1.0f, 1.0f, 1.0f),
+									position + leftSpotLightRelativePosition,
+									normalize(direction * 75.0f),
+									1,
+									15.0f,
+									0.017f );
+	/*rightSpotLight = new SpotLight(	vec3(1.0f, 1.0f, 1.0f),
+									position + rightSpotLightRelativePosition,
+									direction,
+									1,
+									15.0f,
+									0.017f);*/
 }
 
 void Player::update() {
@@ -46,4 +63,7 @@ void Player::update() {
 	
 	// Rotate in Y Axis
 	rotation.y = steerAngle;
+
+	leftSpotLight->direction = normalize(-direction);
+	leftSpotLight->setUniformData("spotlight");
 }

@@ -137,6 +137,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="SkyCamera.cpp" />
+    <ClCompile Include="SpotLight.cpp" />
     <ClCompile Include="Sun.cpp" />
     <ClCompile Include="VertexBufferObject.cpp" />
     <ClCompile Include="ObjectTests.cpp" />
@@ -156,6 +157,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="Skybox.h" />
     <ClInclude Include="SkyCamera.h" />
+    <ClInclude Include="SpotLight.h" />
     <ClInclude Include="Sun.h" />
     <ClInclude Include="VertexBufferObject.h" />
     <ClInclude Include="ObjectTests.h" />
@@ -167,6 +169,7 @@
   <ItemGroup>
     <None Include="data\shaders\shader.frag" />
     <None Include="data\shaders\shader.vert" />
+    <None Include="data\shaders\spotlight.frag" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

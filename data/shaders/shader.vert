@@ -14,11 +14,14 @@ uniform mat4 normalMatrix;
 smooth out vec2 s_coord;
 smooth out vec4 s_color;
 smooth out vec3 s_normal;
+smooth out vec3 s_position;
 
 void main()
 {
 	// MVP
-	gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(a_position, 1.0);
+	vec4 world_position = modelMatrix * vec4(a_position, 1.0);
+	gl_Position = projectionMatrix * viewMatrix * world_position;
+	s_position = world_position.xyz;
 	// Texture
 	s_coord = a_coord;
 	// Color
