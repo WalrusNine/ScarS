@@ -22,8 +22,8 @@ void GameObject::draw() {
 		// Second - Rotate (translate to pivot and rotate)
 		mMatrix = translate(mMatrix, rotationAxis);
 		mMatrix = rotate(mMatrix, glm::radians(rotation.x), vec3(1, 0, 0));
-		mMatrix = rotate(mMatrix, rotation.y, vec3(0, 1, 0));
-		mMatrix = rotate(mMatrix, rotation.z, vec3(0, 0, 1));
+		mMatrix = rotate(mMatrix, glm::radians(rotation.y), vec3(0, 1, 0));
+		mMatrix = rotate(mMatrix, glm::radians(rotation.z), vec3(0, 0, 1));
 		mMatrix = translate(mMatrix, -rotationAxis);
 		// First - Scale
 		mMatrix = glm::scale(mMatrix, scale);
