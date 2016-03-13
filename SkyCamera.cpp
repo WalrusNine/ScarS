@@ -42,17 +42,19 @@ void SkyCamera::update() {
 }
 
 void SkyCamera::calculateMatrices() {
+	float rad_vert = glm::radians(verticalAngle);
+	float rad_hor = glm::radians(horizontalAngle);
 	// Direction : Spherical coordinates to Cartesian coordinates conversion
 	direction = vec3(
-		cos(verticalAngle) * sin(horizontalAngle),
-		sin(verticalAngle),
-		cos(verticalAngle) * cos(horizontalAngle)
+		cos(rad_vert) * sin(rad_hor),
+		sin(rad_vert),
+		cos(rad_vert) * cos(rad_hor)
 		);
 
 	right = vec3(
-		sin(horizontalAngle - 3.14f / 2.0f),
+		sin(rad_hor - 3.14f / 2.0f),
 		0,
-		cos(horizontalAngle - 3.14f / 2.0f)
+		cos(rad_hor - 3.14f / 2.0f)
 		);
 
 	// Up vector: perpendicular to both direction and right

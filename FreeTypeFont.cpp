@@ -1,7 +1,7 @@
 #include "FreeTypeFont.h"
 
-#define NOMINMAX
-#include <Windows.h>
+//#define NOMINMAX
+//#include <Windows.h>
 
 #include <GL\glew.h>
 #include <glm\glm.hpp>
@@ -12,8 +12,7 @@
 
 #define MAXWIDTH 1024
 
-FreeTypeFont::FreeTypeFont()
-{
+FreeTypeFont::FreeTypeFont() {
 	isLoaded = false;
 
 	// Create temp shader TODO: create and set outside
@@ -33,8 +32,7 @@ texture).
 
 inline int next_p2(int n) { int res = 1; while (res < n)res <<= 1; return res; }
 
-void FreeTypeFont::createChar(int index)
-{
+void FreeTypeFont::createChar(int index) {
 	FT_Load_Glyph(face, FT_Get_Char_Index(face, index), FT_LOAD_DEFAULT);
 
 	FT_Render_Glyph(face->glyph, FT_RENDER_MODE_NORMAL);
@@ -120,6 +118,7 @@ bool FreeTypeFont::loadFont2(std::string file, int pxSize) {
 	int h = 0, rowh = 0;
 
 	for (int i = 32; i < 128; ++i) {
+		// Load character
 		FT_Load_Char(face, i, FT_LOAD_RENDER);
 
 		// If reached line limit, create new line
@@ -136,14 +135,14 @@ bool FreeTypeFont::loadFont2(std::string file, int pxSize) {
 	h += rowh;
 
 	// Create texture with nothing
-	Texture* t = new Texture();
+	mainTexture = new Texture();
 	// Set its size to w x h = width of longest line x sum of the height of the lines
-	t->createFromData(NULL, w, h, 8, GL_ALPHA, false, true);
+	mainTexture->createFromData(NULL, w, h, 8, GL_ALPHA, false, true);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-	t->setFiltering(TEXTURE_FILTER_MAG_BILINEAR, TEXTURE_FILTER_MIN_BILINEAR);
+	mainTexture->setFiltering(TEXTURE_FILTER_MAG_BILINEAR, TEXTURE_FILTER_MIN_BILINEAR);
 
 	// Create atlas
 	atlas = new Atlas();
@@ -156,6 +155,9 @@ bool FreeTypeFont::loadFont2(std::string file, int pxSize) {
 	rowh = 0;
 
 	glm::vec2 texQuad[] = { glm::vec2(0.0f, 1.0f), glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), glm::vec2(1.0f, 0.0f) };
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+	vbo.createVBO( { sizeof(glm::vec3), sizeof(glm::vec2) } );
 	vbo.bindVBO();
 
 	// Add subimages to the texture created
@@ -164,7 +166,7 @@ bool FreeTypeFont::loadFont2(std::string file, int pxSize) {
 		CharacterInfo ci;
 		if (i < 32) {
 			ci.ax = 0;
-			ci.ay =0;
+			ci.ay = 0;
 
 			ci.bw = 0;
 			ci.bh = 0;
@@ -227,6 +229,7 @@ bool FreeTypeFont::loadFont2(std::string file, int pxSize) {
 				vbo.addData(&position[i], sizeof(glm::vec3));
 				// Add texture coord
 				vbo.addData(&texQuad[i], sizeof(glm::vec2));
+				//vbo.addVertex(&position[i], &texQuad[i], &glm::vec3(1.0f), &glm::vec4(1.0f));
 			}
 
 			// ox = increase total width with the addition of new char
@@ -250,13 +253,13 @@ bool FreeTypeFont::loadFont2(std::string file, int pxSize) {
 	glVertexAttribPointer(loc, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec3) + sizeof(glm::vec2), (void*)(sizeof(glm::vec3)));
 	return true;
 }
-
+/*
 void FreeTypeFont::print(std::string text, float x, float y, float sx, float sy) {
 	int loc = 0;
 
 	if (!isLoaded) return;
 
-	/*
+	
 	int loc = 0;
 
 	// Use the texture containing the atlas
@@ -279,39 +282,40 @@ void FreeTypeFont::print(std::string text, float x, float y, float sx, float sy)
 
 	// Loop through all characters
 	for (int p = 0; p < text.size(); ++p) {
-	char cur_c = text[p];
-	// Calculate the vertex and texture coordinates
-	float x2 = x + atlas->charInfo[p].bl * sx;
-	float y2 = -y - atlas->charInfo[p].bt * sy;
-	float w = atlas->charInfo[p].bw * sx;
-	float h = atlas->charInfo[p].bh * sy;
+		char cur_c = text[p];
+		// Calculate the vertex and texture coordinates
+		// Note: Wrong, original deals with the pointer to get char value
+		float x2 = x + atlas->charInfo[p].bl * sx;
+		float y2 = -y - atlas->charInfo[p].bt * sy;
+		float w = atlas->charInfo[p].bw * sx;
+		float h = atlas->charInfo[p].bh * sy;
 
-	// Advance the cursor to the start of the next character
-	x += atlas->charInfo[p].ax * sx;
-	y += atlas->charInfo[p].ay * sy;
+		// Advance the cursor to the start of the next character
+		x += atlas->charInfo[p].ax * sx;
+		y += atlas->charInfo[p].ay * sy;
 
-	// Skip glyphs that have no pixels
-	if (!w || !h)
-	continue;
+		// Skip glyphs that have no pixels
+		if (!w || !h)
+		continue;
 
-	coords[c++] = {
-	x2, -y2, atlas->charInfo[p].tx, atlas->charInfo[p].ty
-	};
-	coords[c++] = {
-	x2 + w, -y2, atlas->charInfo[p].tx + atlas->charInfo[p].bw / atlas->w, atlas->charInfo[p].ty
-	};
-	coords[c++] = {
-	x2, -y2 - h, atlas->charInfo[p].tx, atlas->charInfo[p].ty + atlas->charInfo[p].bh / atlas->h
-	};
-	coords[c++] = {
-	x2 + w, -y2, atlas->charInfo[p].tx + atlas->charInfo[p].bw / atlas->w, atlas->charInfo[p].ty
-	};
-	coords[c++] = {
-	x2, -y2 - h, atlas->charInfo[p].tx, atlas->charInfo[p].ty + atlas->charInfo[p].bh / atlas->h
-	};
-	coords[c++] = {
-	x2 + w, -y2 - h, atlas->charInfo[p].tx + atlas->charInfo[p].bw / atlas->w, atlas->charInfo[p].ty + atlas->charInfo[p].bh / atlas->h
-	};
+		coords[c++] = {
+		x2, -y2, atlas->charInfo[p].tx, atlas->charInfo[p].ty
+		};
+		coords[c++] = {
+		x2 + w, -y2, atlas->charInfo[p].tx + atlas->charInfo[p].bw / atlas->w, atlas->charInfo[p].ty
+		};
+		coords[c++] = {
+		x2, -y2 - h, atlas->charInfo[p].tx, atlas->charInfo[p].ty + atlas->charInfo[p].bh / atlas->h
+		};
+		coords[c++] = {
+		x2 + w, -y2, atlas->charInfo[p].tx + atlas->charInfo[p].bw / atlas->w, atlas->charInfo[p].ty
+		};
+		coords[c++] = {
+		x2, -y2 - h, atlas->charInfo[p].tx, atlas->charInfo[p].ty + atlas->charInfo[p].bh / atlas->h
+		};
+		coords[c++] = {
+		x2 + w, -y2 - h, atlas->charInfo[p].tx + atlas->charInfo[p].bw / atlas->w, atlas->charInfo[p].ty + atlas->charInfo[p].bh / atlas->h
+		};
 	}
 
 	// Draw all the character on the screen in one go
@@ -320,10 +324,10 @@ void FreeTypeFont::print(std::string text, float x, float y, float sx, float sy)
 	glDrawArrays(GL_TRIANGLES, 0, c);
 
 	glDisableVertexAttribArray(loc);
-	*/
-}
+	
+}*/
 
-bool FreeTypeFont::loadFont(std::string file, int pxSize)
+/*bool FreeTypeFont::loadFont(std::string file, int pxSize)
 {
 	bool error = FT_Init_FreeType(&lib);
 
@@ -354,7 +358,7 @@ bool FreeTypeFont::loadFont(std::string file, int pxSize)
 	glEnableVertexAttribArray(loc);
 	glVertexAttribPointer(loc, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec3) + sizeof(glm::vec2), (void*)(sizeof(glm::vec3)));
 	return true;
-}
+}*/
 
 /*-----------------------------------------------
 
@@ -368,7 +372,7 @@ directory).
 
 /*---------------------------------------------*/
 
-bool FreeTypeFont::loadSystemFont(std::string name, int pxSize)
+/*bool FreeTypeFont::loadSystemFont(std::string name, int pxSize)
 {
 	char buf[512]; GetWindowsDirectory(buf, 512);
 	std::string path = buf;
@@ -376,7 +380,7 @@ bool FreeTypeFont::loadSystemFont(std::string name, int pxSize)
 	path += name;
 
 	return loadFont2(path, pxSize);
-}
+}*/
 
 /*-----------------------------------------------
 
@@ -390,15 +394,22 @@ Result:	Prints text at specified position
 with specified pixel size.
 
 /*---------------------------------------------*/
-/*
+
 void FreeTypeFont::print(std::string text, int x, int y, int pxSize)
 {
 	if (!isLoaded) return;
 
 	glBindVertexArray(vao);
-	shader->setUniform("gSampler", 0);
+	shader->setUniform("g_sampler", 0);
+	vbo.bindVBO();
+
+	glDisable(GL_DEPTH_TEST);
+
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	mainTexture->bind();
+
 	int curX = x, curY = y;
 	if (pxSize == -1) pxSize = loadedPixelSize;
 	float scale = float(pxSize) / float(loadedPixelSize);
@@ -411,7 +422,7 @@ void FreeTypeFont::print(std::string text, int x, int y, int pxSize)
 		int index = int(text[i]);
 		curX += bearingX[index] * pxSize / loadedPixelSize;
 		if (text[i] != ' ') {
-			charTextures[index].bind();
+			//charTextures[index].bind();
 			glm::mat4 mModelView = glm::translate(glm::mat4(1.0f), glm::vec3(float(curX), float(curY), 0.0f));
 			mModelView = glm::scale(mModelView, glm::vec3(scale));
 			shader->setUniform("modelMatrix", mModelView);
@@ -421,9 +432,11 @@ void FreeTypeFont::print(std::string text, int x, int y, int pxSize)
 
 		curX += (advX[index] - bearingX[index])*pxSize / loadedPixelSize;
 	}
+
 	glDisable(GL_BLEND);
+	glEnable(GL_DEPTH_TEST);
 }
-*/
+
 /*-----------------------------------------------
 
 Name:	releaseFont

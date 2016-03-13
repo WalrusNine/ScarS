@@ -21,21 +21,21 @@ Player::Player() {
 	rightSpotLightRelativePosition = vec3(0.65f, 0.6f, -1.4f);
 	leftSpotLightRelativePosition = vec3(-0.65f, 0.f, -1.4f);
 
-	distance = glm::distance(position, position + leftSpotLightRelativePosition);
-	//distance = 1;
+	//distance = glm::distance(position, position + leftSpotLightRelativePosition);
+	distance = 0;
 
 	leftSpotLight = new SpotLight(	vec3(1.0f, 1.0f, 1.0f),
-									position + leftSpotLightRelativePosition,
+									position,
 									normalize(-direction),
 									1,
 									15.0f,
 									0.017f );
-	rightSpotLight = new SpotLight(	vec3(1.0f, 1.0f, 1.0f),
+	/*rightSpotLight = new SpotLight(	vec3(1.0f, 1.0f, 1.0f),
 									position + rightSpotLightRelativePosition,
 									direction,
 									0,
 									15.0f,
-									0.017f);
+									0.017f);*/
 }
 
 
@@ -68,7 +68,7 @@ void Player::update() {
 	}
 	if (InputController::getInputState(true, GLFW_KEY_F) == INPUT_RELEASED) {
 		leftSpotLight->isOn = !leftSpotLight->isOn;
-		rightSpotLight->isOn = !rightSpotLight->isOn;
+		//rightSpotLight->isOn = !rightSpotLight->isOn;
 	}
 	
 	// Rotate in Y Axis
@@ -76,18 +76,18 @@ void Player::update() {
 
 	//leftSpotLight->position = position + leftSpotLightRelativePosition;
 		vec3 dir = glm::normalize(leftSpotLight->position - position);
-		leftSpotLight->position = position + distance * dir;
+		leftSpotLight->position = position;
 		//distance = glm::distance(leftSpotLight->position, position);
 
 	leftSpotLight->direction = normalize(-direction);
 		//leftSpotLight->position = position + leftSpotLightRelativePosition;
-		leftSpotLight->position = position + distance * vec3(cos(glm::radians(steerAngle)), 0, sin(glm::radians(steerAngle)));
+		//leftSpotLight->position = position + distance * vec3(cos(glm::radians(steerAngle)), 0, sin(glm::radians(steerAngle)));
 
 
 
-	rightSpotLight->direction = normalize(-direction);
-	rightSpotLight->position = position + rightSpotLightRelativePosition;
+	//rightSpotLight->direction = normalize(-direction);
+	//rightSpotLight->position = position + rightSpotLightRelativePosition;
 
 	leftSpotLight->setUniformData("left");
-	rightSpotLight->setUniformData("right");
+	//rightSpotLight->setUniformData("right");
 }

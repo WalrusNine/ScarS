@@ -57,9 +57,6 @@
     <ClCompile Include="Skybox.cpp">
       <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="InputController.cpp">
-      <Filter>Source Files\GameObjects</Filter>
-    </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
@@ -72,14 +69,26 @@
     <ClCompile Include="FreeTypeFont.cpp">
       <Filter>Source Files\RenderBasics</Filter>
     </ClCompile>
-    <ClCompile Include="SkyCamera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Sun.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SpotLight.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HeadLamp.cpp">
+      <Filter>Source Files\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="InputController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SkyCamera.cpp">
+      <Filter>Source Files\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Geometry.cpp">
+      <Filter>Source Files\RenderBasics</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Source Files\RenderBasics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -116,9 +125,6 @@
     <ClInclude Include="Skybox.h">
       <Filter>Source Files\GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="InputController.h">
-      <Filter>Source Files\GameObjects</Filter>
-    </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Source Files\GameObjects</Filter>
     </ClInclude>
@@ -131,14 +137,26 @@
     <ClInclude Include="FreeTypeFont.h">
       <Filter>Source Files\RenderBasics</Filter>
     </ClInclude>
-    <ClInclude Include="SkyCamera.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="Sun.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="SpotLight.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HeadLamp.h">
+      <Filter>Source Files\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="InputController.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SkyCamera.h">
+      <Filter>Source Files\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry.h">
+      <Filter>Source Files\RenderBasics</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Source Files\RenderBasics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

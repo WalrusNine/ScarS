@@ -20,8 +20,7 @@ Texture::Texture(std::string name) {
 	this->name = name;
 }
 
-void Texture::createFromData(GLubyte* data, int inWidth, int inHeight, int inBpp, GLenum format, bool generateMipMaps, bool pixelStore)
-{
+void Texture::createFromData(GLubyte* data, int inWidth, int inHeight, int inBpp, GLenum format, bool generateMipMaps, bool pixelStore) {
 	// Generate an OpenGL texture ID for this texture
 	glGenTextures(1, &textureHandle);
 	glBindTexture(GL_TEXTURE_2D, textureHandle);
@@ -116,8 +115,7 @@ void Texture::bind(GLenum textureUnit) {
 	glBindSampler(textureUnit, samplerHandle);
 }
 
-std::string Texture::getPath()
-{
+std::string Texture::getPath() {
 	return filepath;
 }
 
@@ -144,23 +142,20 @@ void Texture::setFiltering(int in_magnification, int in_minification) {
 	magnification = in_magnification;
 }
 
-void Texture::setSamplerParameter(GLenum parameter, GLenum value)
-{
+void Texture::setSamplerParameter(GLenum parameter, GLenum value) {
 	glSamplerParameteri(samplerHandle, parameter, value);
 }
 
-int Texture::getMinificationFilter()
-{
+int Texture::getMinificationFilter() {
 	return minification;
 }
 
-int Texture::getMagnificationFilter()
-{
+int Texture::getMagnificationFilter() {
 	return magnification;
 }
 
 void Texture::addTexture(Texture* t) {
-	Texture::textures.push_back(t);
+	textures.push_back(t);
 }
 
 Texture* Texture::createTexture(std::string filepath, int mag, int min, std::string name, bool generateMipMaps) {

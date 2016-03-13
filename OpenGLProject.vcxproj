@@ -125,7 +125,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="FreeTypeFont.cpp" />
+    <ClCompile Include="Geometry.cpp" />
     <ClCompile Include="GUI.cpp" />
+    <ClCompile Include="HeadLamp.cpp" />
+    <ClCompile Include="Material.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Car.cpp" />
@@ -147,7 +150,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FreeTypeFont.h" />
+    <ClInclude Include="Geometry.h" />
     <ClInclude Include="GUI.h" />
+    <ClInclude Include="HeadLamp.h" />
+    <ClInclude Include="Material.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Car.h" />

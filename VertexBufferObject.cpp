@@ -17,12 +17,17 @@ Result:	Creates vertex buffer object.
 
 /*---------------------------------------------*/
 
-void VertexBufferObject::createVBO(int size)
+void VertexBufferObject::createVBO(std::vector<int> sizes)
 {
 	glGenBuffers(1, &buffer);
-	data.reserve(size);
-	this->size = size;
+	this->infoSizes = sizes;
+	this->size = 0;
 	currentSize = 0;
+
+	vertexTotalSize = 0;
+	for (int i = 0; i < (int)sizes.size(); ++i) {
+		vertexTotalSize += sizes[i];
+	}
 }
 
 /*-----------------------------------------------
@@ -145,6 +150,13 @@ void VertexBufferObject::addData(void* d, GLuint dataSize)
 	currentSize += dataSize;
 }
 
+void VertexBufferObject::addVertex(void* pos, void* uv, void* normal, void* diffuse) {
+	addData(pos, infoSizes[0]);
+	addData(uv, infoSizes[1]);
+	addData(normal, infoSizes[2]);
+	addData(diffuse, infoSizes[3]);
+}
+
 /*-----------------------------------------------
 
 Name:	GetDataPointer
@@ -192,3 +204,10 @@ int VertexBufferObject::getCurrentSize()
 	return currentSize;
 }
 
+int VertexBufferObject::getVertexTotalSize() {
+	return vertexTotalSize;
+}
+
+std::vector<int> VertexBufferObject::getVertexSizes() {
+	return infoSizes;
+}

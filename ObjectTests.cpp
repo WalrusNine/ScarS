@@ -20,8 +20,8 @@
 #include "Skybox.h"
 #include "Player.h"
 #include "GUI.h"
-#include "FreeTypeFont.h"
 #include "SpotLight.h"
+#include "Sun.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -29,8 +29,6 @@
 
 std::vector<GameObject*> gameObjects;
 GUI* gui;
-//FreeTypeFont* ftf;
-//SpotLight* sl;
 
 void TestSetup3D() {
 	// Create Camera
@@ -42,14 +40,18 @@ void TestSetup3D() {
 	// Create Textures
 	Texture::addTexture(Texture::createTexture("data\\textures\\golddiag.jpg", TEXTURE_FILTER_MAG_BILINEAR, TEXTURE_FILTER_MIN_BILINEAR_MIPMAP, "golddiag", true));
 	Texture::addTexture(Texture::createTexture("data\\textures\\snow.jpg", TEXTURE_FILTER_MAG_BILINEAR, TEXTURE_FILTER_MIN_BILINEAR_MIPMAP, "snow", true));
+	Texture::addTexture(Texture::createTexture("data\\textures\\box.jpg", TEXTURE_FILTER_MAG_BILINEAR, TEXTURE_FILTER_MIN_BILINEAR_MIPMAP, "box", true));
 
 	// Create Models
 	Model::addModel(Model::createModel("data\\models\\FireGTO\\FireGTO.blend", "car"));
 	Model::addModel(Model::createModel("data\\models\\house\\house.3ds", "house"));
-	//Model::addModel(Model::createModel("data\\models\\Wolf\\Wolf.obj", "wolf"));
+	Model::addModel(Model::createModel("data\\models\\Wolf\\Wolf.obj", "wolf"));
 	Model::addModel(Model::createModel("data\\models\\tree\\Tree1.3ds", "tree"));
 	Model::addModel(Model::createModel("data\\models\\building\\Small_Building_1.blend", "building"));
-	Model::addModel(Model::createGeometry(GEOMETRY_PLANE, Texture::getTexture("snow"), "ground"));
+	Model::addModel(Model::createModel("data\\models\\Roads\\Roads.blend", "roads"));
+	Model::addModel(Model::createGeometry(GEOMETRY_PLANE, Texture::getTexture("snow"), vec4(1.0f), "ground"));
+	Model::addModel(Model::createGeometry(GEOMETRY_CUBE, Texture::getTexture("box"), vec4(1.0f), "woodenbox"));
+	Model::addModel(Model::createGeometry(GEOMETRY_CUBE, nullptr, vec4(0.0f, 0.0f, 1.0f, 0.5f), "colorbox"));
 	//Model::addModel(Model::createModel("data\\models\\goku\\goku super 3d.blend1", "goku"));
 	//Model::addModel(Model::createSkybox("data\\skyboxes\\ame_siege\\", { "siege_ft.tga", "siege_bk.tga", "siege_lf.tga", "siege_rt.tga", "siege_up.tga", "siege_dn.tga" }, "siege"));
 	//Model::addModel(Model::createSkybox("data\\skyboxes\\elbrus\\", { "elbrus_front.tga", "elbrus_back.tga", "elbrus_right.tga", "elbrus_left.tga", "elbrus_top.tga", "elbrus_top.tga" }, "siege"));
@@ -66,20 +68,23 @@ void TestSetup3D() {
 		GameObject* go = new House();
 		go->position.x = -80.0f + i * 30.0f;
 		go->position.y = -9.8f;
+		go->position.z = -8;
 		gameObjects.push_back(go);
 
 		// Cars
 		go = new Car();
 		go->position.x = -65.0f + i * 30.0f;
 		go->position.y = -9.8f;
+		go->position.z = -8;
 		gameObjects.push_back(go);
 	}
 
 	// Wolf
-	/*GameObject* wolf = new Wolf();
+	GameObject* wolf = new Wolf();
 	wolf->position.y = -9.8f;
-	gameObjects.push_back(wolf);*/
+	gameObjects.push_back(wolf);
 
+	// Tree
 	GameObject* tree = new GameObject();
 	tree->model = Model::getModel("tree");
 	tree->position.z = 15;
@@ -87,13 +92,33 @@ void TestSetup3D() {
 	tree->rotation.x = 270.0f;
 	gameObjects.push_back(tree);
 
+	// Building
 	GameObject* building = new GameObject();
 	building->model = Model::getModel("building");
-	building->position.z = -40.f;
+	building->position.z = 60.f;
 	building->position.y = -9.8f;
 	building->rotation.x = 270.0f;
 	building->scale *= 10.0f;
 	gameObjects.push_back(building);
+
+	// Box
+	GameObject* box = new GameObject();
+	box->model = Model::getModel("woodenbox");
+	box->scale *= 0.6f;
+	box->position.z = 15.0f;
+	box->position.y = -9.2f;
+	gameObjects.push_back(box);
+
+	// Colored box
+	GameObject* colorBox = new GameObject();
+	colorBox->model = Model::getModel("colorbox");
+	colorBox->position.x = -20.0f;
+	colorBox->position.y = -4.0f;
+	colorBox->position.z = 20.0f;
+	colorBox->scale.y *= 6.0f;
+	colorBox->scale.z *= 3;
+	colorBox->setTransparent(true);
+	gameObjects.push_back(colorBox);
 
 	// Ground
 	GameObject* ground = new GameObject();
@@ -110,20 +135,37 @@ void TestSetup3D() {
 	gui = new GUI();
 	gui->setOrtho2D(1280, 720);
 
-	//ftf = new FreeTypeFont();
-	//ftf->loadSystemFont("comic.ttf", 32);
+	// Sun
+	GameObject* sun = new Sun();
+	gameObjects.push_back(sun);
 
-	// Flashlight
-	//sl = new SpotLight(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1, 15.0f, 0.017f);
+	// Roads
+	GameObject* roads = new GameObject();
+	roads->model = Model::getModel("roads");
+	roads->position.x = -20;
+	roads->position.y = -9.8f;
+	roads->position.z = 20;
+	roads->rotation.x = 270;
+	roads->rotation.z = 90;
+	roads->scale.x *= 20;
+	roads->scale.y *= 100;
+	gameObjects.push_back(roads);
 
+	// Organize list (transparent objects last)
+	int len = (int) gameObjects.size();
+	for (int i = 0; i < len; ++i) {
+		if (gameObjects[i]->isTransparent()) {
+			GameObject* tr = gameObjects[i];
+			gameObjects.erase(gameObjects.begin() + i);
+			gameObjects.push_back(tr);
+		}
+	}
 }
 
 void initScene()
 {	
 	TestSetup3D();
 }
-
-float sunAngle = 90.0f;
 
 void renderScene3D() {
 	// Get Shader attributes' locations
@@ -134,41 +176,6 @@ void renderScene3D() {
 	Camera* camera = Camera::mainCamera;
 	glUniformMatrix4fv(projectionMatrixLocation, 1, GL_FALSE, &camera->getProjectionMatrix()[0][0]);
 	glUniformMatrix4fv(viewMatrixLocation, 1, GL_FALSE, &camera->getViewMatrix()[0][0]);
-	
-	// Sampler
-	int sampler = Shader::shader->getUniformLocation("gSampler");
-	glUniform1i(sampler, 0);
-	
-	// Light
-	float sine = sin(sunAngle*3.1415 / 180.0);
-	glm::vec3 sunPos(cos(sunAngle*3.1415 / 180.0) * 70, sin(sunAngle*3.1415 / 180.0) * 70, 0.0);
-	//sunPos = vec3 (0, -100, 0);
-	int loc = 0;
-	loc = Shader::shader->getUniformLocation("sunlight.color");
-	glUniform3fv(loc, 1, &glm::vec3(1.0f, 1.0f, 1.0f)[0]);
-	loc = Shader::shader->getUniformLocation("sunlight.ambient_intensity");
-	float ambientIntensity = 0.5f;
-	glUniform1fv(loc, 1, &ambientIntensity);
-	loc = Shader::shader->getUniformLocation("sunlight.direction");
-	vec3 norm = -glm::normalize(sunPos);
-	glUniform3fv(loc, 1, &norm[0]);
-
-	// Spotlight
-	/*glm::vec3 vSpotLightPos = Camera::mainCamera->getPosition();
-	glm::vec3 vCameraDir = Camera::mainCamera->getDirection();
-	// Move down a little
-	vSpotLightPos.y -= 3.2f;
-	// Find direction of spotlight
-	glm::vec3 vSpotLightDir = (vSpotLightPos + vCameraDir*75.0f) - vSpotLightPos;
-	vSpotLightDir = glm::normalize(vSpotLightDir);
-	// Find vector of horizontal offset
-	glm::vec3 vHorVector = glm::cross(Camera::mainCamera->getViewVector() - Camera::mainCamera->getPosition(), Camera::mainCamera->getUp());
-	vSpotLightPos += vHorVector*3.3f;
-	// Set it
-	sl->position = vSpotLightPos;
-	sl->direction = vSpotLightDir;
-
-	sl->setUniformData("spotLight");*/
 
 	// AssImp
 	Model::BindModelsVAO();
@@ -178,38 +185,12 @@ void renderScene3D() {
 	for (int i = 0; i < len; ++i) {
 		gameObjects[i]->update();
 	}
+
 	// Draw objects
 	for (int i = 0; i < len; ++i) {
 		gameObjects[i]->draw();
 	}
 
-	// Draw text
-	//glDisable(GL_DEPTH_TEST);
-	//glDepthFunc(GL_ALWAYS);
-	//glUniformMatrix4fv(viewMatrixLocation, 1, GL_FALSE, &mat4(1.0f)[0][0]);
-	//glUniformMatrix4fv(projectionMatrixLocation, 1, GL_FALSE, &gui->getOrthoMatrix()[0][0]);
-
-	//char buf[256];
-	//sprintf_s(buf, "Font Size: %d\nPress UP and DOWN arrow key to change\n\nTotal Torus Faces: %d", 24, 5);
-
-	//ftf->print(buf, 20, 720 - 10 - 24, 24);
-	//ftf->print("www.mbsoftworks.sk", 20, 20, 24);
-	//glEnable(GL_DEPTH_TEST);
-	//glDepthFunc(GL_LESS);
-
-	// Draw Sun
-	/*VertexBufferObject* vbo = new VertexBufferObject();
-	mat4 sun = translate(mat4(1.0), sunPos);
-	Shader::shader->setUniform("modelMatrix", sun);
-	Shader::shader->setUniform("normalMatrix", glm::transpose(glm::inverse(sun)));
-	ambientIntensity = 0.8f;  glUniform1fv(loc, 1, &ambientIntensity);*/
-
-	if (InputController::getInputState(true, GLFW_KEY_1) == INPUT_HELD) {
-		sunAngle -= (45.0f) * FPSController::getDeltaTime();
-	}
-	else if (InputController::getInputState(true, GLFW_KEY_2) == INPUT_HELD) {
-		sunAngle += (45.0f) * FPSController::getDeltaTime();
-	}
 }
 
 void renderScene(void)

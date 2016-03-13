@@ -4,10 +4,12 @@
 
 #include <vector>
 
+// Put static vertexTotalSize
+
 class VertexBufferObject {
 
 public:
-	void createVBO(int size = 0);
+	void createVBO(std::vector<int> sizes);
 	void deleteVBO();
 
 	void* mapBufferToMemory(int usageHint);
@@ -18,6 +20,7 @@ public:
 	void uploadDataToGPU(int usageHint = GL_STATIC_DRAW);
 
 	void addData(void* data, GLuint dataSize);
+	void addVertex(void* pos, void* uv, void* normal, void* diffuse);
 
 	void* getDataPointer();
 	GLuint getBufferID();
@@ -25,6 +28,9 @@ public:
 	int getCurrentSize();
 
 	VertexBufferObject();
+
+	int getVertexTotalSize();
+	std::vector<int> getVertexSizes();
 
 private:
 	GLuint buffer;
@@ -34,4 +40,8 @@ private:
 	std::vector<GLbyte> data;
 
 	bool wasDataUploaded;
+
+	// Vertex Information
+	int vertexTotalSize;
+	std::vector<int> infoSizes;
 };

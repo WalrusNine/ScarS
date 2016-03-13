@@ -27,7 +27,7 @@ smooth in vec3 s_normal;
 smooth in vec3 s_position;
 
 // Uniforms
-uniform sampler2D gSampler;
+uniform sampler2D g_sampler;
 
 uniform directional_light sunlight;
 
@@ -66,7 +66,7 @@ vec4 get_spotlight_color (const spotlight s, vec3 world_pos) {
 void main()
 {
 	// Get color from texture
-	vec4 texture_color = texture2D(gSampler, s_coord);
+	vec4 texture_color = texture2D(g_sampler, s_coord);
 
 	// Calculate directional light
 	// Diffuse = intensity depending on (normal,direction) angle

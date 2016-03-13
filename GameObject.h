@@ -9,7 +9,8 @@ using namespace glm;
 #include "FPSController.h"
 #include "InputController.h"
 
-class GameObject {
+class GameObject
+{
 
 public:
 	GameObject();
@@ -17,6 +18,12 @@ public:
 	// Basic object
 	virtual void update();
 	virtual void draw();
+
+	void setTransparent(bool b);
+	void setEnabled(bool b);
+
+	bool isTransparent();
+	bool isEnabled();
 
 	// Transform
 	vec3 position;
@@ -35,6 +42,7 @@ private:
 	// Normal Matrix
 	mat4 nMatrix;
 
-	bool isEnabled;
+	bool enabled;
+	bool transparent;
 
 };

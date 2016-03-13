@@ -10,6 +10,7 @@
 
 class CharacterInfo
 {
+
 public:
 	// Advance is the whole space occupied by the letter, so that
 	// the next letter starts at the end of advance
@@ -44,6 +45,7 @@ public:
 
 class FreeTypeFont
 {
+
 public:
 
 	bool loadFont(std::string filepath, int pxSize);
@@ -52,8 +54,8 @@ public:
 
 	int getTextWidth(std::string text, int pxSize);
 
-	//void print(std::string text, int x, int y, int pxSize = -1);
-	void print(std::string text, float x, float y, float sx, float sy);
+	void print(std::string text, int x, int y, int pxSize = 32);
+	//void print(std::string text, float x, float y, float sx, float sy);
 
 	void releaseFont();
 
@@ -81,4 +83,6 @@ private:
 	Shader* shader;
 
 	Atlas* atlas;
+
+	Texture* mainTexture;
 };

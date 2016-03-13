@@ -17,7 +17,8 @@ enum ETextureFiltering
 	TEXTURE_FILTER_MIN_TRILINEAR, // Bilinear criterion for minification on two closest mipmaps, then averaged
 };
 
-class Texture {
+class Texture
+{
 
 public:
 	Texture(std::string name = "");
@@ -43,6 +44,8 @@ public:
 	static Texture* createTexture(std::string filepath, int magnification, int minification, std::string name, bool generateMipMaps = false);
 	static Texture* getTexture(std::string name);
 
+	static std::vector<Texture*> textures;
+
 private:
 	std::string filepath;
 	std::string name;
@@ -54,6 +57,4 @@ private:
 	bool mipMapsGenerated;
 
 	int minification, magnification;
-
-	static std::vector<Texture*> textures;
 };
