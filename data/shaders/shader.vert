@@ -22,10 +22,13 @@ void main()
 	vec4 world_position = modelMatrix * vec4(a_position, 1.0);
 	gl_Position = projectionMatrix * viewMatrix * world_position;
 	s_position = world_position.xyz;
+
 	// Texture
 	s_coord = a_coord;
+
 	// Color
 	s_color = a_color;
+
 	// Normal
 	vec4 temp_normal = normalMatrix * vec4(a_normal, 0.0);
 	s_normal = temp_normal.xyz;

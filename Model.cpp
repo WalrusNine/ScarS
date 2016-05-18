@@ -142,17 +142,6 @@ bool Model::LoadModelFromFile(char* filepath) {
 	return isLoaded = true;
 }
 
-/*-----------------------------------------------
-
-Name:	FinalizeVBO
-
-Params: none
-
-Result: Uploads all loaded model data in one global
-models' VBO.
-
-/*---------------------------------------------*/
-
 void Model::FinalizeVBO() {
 	int totalSize = vbo.getVertexTotalSize();
 	std::vector<int> sizes = vbo.getVertexSizes();
@@ -184,16 +173,6 @@ void Model::FinalizeVBO() {
 	//glEnableVertexAttribArray(loc);
 	//glVertexAttribPointer(loc, 4, GL_FLOAT, GL_FALSE, vertexTotalSize, (void*)(2 * sizeof(aiVector3D) + sizeof(aiVector2D) + sizeof(aiColor4D)));
 }
-
-/*-----------------------------------------------
-
-Name:	BindModelsVAO
-
-Params: none
-
-Result: Binds VAO of models with their VBO.
-
-/*---------------------------------------------*/
 
 void Model::BindModelsVAO() {
 	glBindVertexArray(vao);
@@ -270,6 +249,27 @@ Model* Model::createGeometry(GeometryType g, Texture * t, glm::vec4 color, std::
 
 
 	return model;
+}
+
+void Model::setTexture(Texture* t, GLenum drawmode) {
+	// Texture
+	int texLocation = -1;
+	int nTex = (int)Texture::textures.size();
+	for (int i = 0; i < nTex; ++i) {
+		if (t->getTextureHandle() == Texture::textures[i]->getTextureHandle()) {
+			texLocation = i;
+			break;
+		}
+	}
+	if (texLocation != -1) {
+		materialIndices[0] = texLocation;
+	}
+	else {
+		materialIndices[0] = nTex;
+		Texture::textures.push_back(t);
+	}
+
+	drawMode = drawmode;
 }
 
 Model* Model::createSkybox(std::string dir, std::vector<std::string> filenames, std::string name) {
@@ -390,7 +390,6 @@ Model* Model::createSkybox(std::string dir, std::vector<std::string> filenames, 
 void Model::addModel(Model * m) {
 	models.push_back(m);
 }
-
 
 void Model::render() {
 	if (!isLoaded) return;

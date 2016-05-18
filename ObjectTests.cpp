@@ -22,20 +22,26 @@
 #include "GUI.h"
 #include "SpotLight.h"
 #include "Sun.h"
+#include "FrameBuffer.h"
+#include "MultiLayeredHeightmap.h"
+#include "Television.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 
+
 std::vector<GameObject*> gameObjects;
 GUI* gui;
+GameObject* sun;
+Television* television;
 
 void TestSetup3D() {
 	// Create Camera
-	Camera::mainCamera = Camera::createCamera();
-	gameObjects.push_back((GameObject*)Camera::mainCamera);
-	/*SkyCamera::mainCamera = SkyCamera::createCamera();
-	gameObjects.push_back((GameObject*)SkyCamera::mainCamera);*/
+	//Camera::mainCamera = Camera::createCamera();
+	//gameObjects.push_back((GameObject*)Camera::mainCamera);
+	SkyCamera::mainCamera = SkyCamera::createCamera();
+	gameObjects.push_back((GameObject*)SkyCamera::mainCamera);
 
 	// Create Textures
 	Texture::addTexture(Texture::createTexture("data\\textures\\golddiag.jpg", TEXTURE_FILTER_MAG_BILINEAR, TEXTURE_FILTER_MIN_BILINEAR_MIPMAP, "golddiag", true));
@@ -52,6 +58,7 @@ void TestSetup3D() {
 	Model::addModel(Model::createGeometry(GEOMETRY_PLANE, Texture::getTexture("snow"), vec4(1.0f), "ground"));
 	Model::addModel(Model::createGeometry(GEOMETRY_CUBE, Texture::getTexture("box"), vec4(1.0f), "woodenbox"));
 	Model::addModel(Model::createGeometry(GEOMETRY_CUBE, nullptr, vec4(0.0f, 0.0f, 1.0f, 0.5f), "colorbox"));
+	Model::addModel(Model::createGeometry(GEOMETRY_PLANE, nullptr, vec4(1.0f, 1.0f, 1.0f, 1.0f), "panel"));
 	//Model::addModel(Model::createModel("data\\models\\goku\\goku super 3d.blend1", "goku"));
 	//Model::addModel(Model::createSkybox("data\\skyboxes\\ame_siege\\", { "siege_ft.tga", "siege_bk.tga", "siege_lf.tga", "siege_rt.tga", "siege_up.tga", "siege_dn.tga" }, "siege"));
 	//Model::addModel(Model::createSkybox("data\\skyboxes\\elbrus\\", { "elbrus_front.tga", "elbrus_back.tga", "elbrus_right.tga", "elbrus_left.tga", "elbrus_top.tga", "elbrus_top.tga" }, "siege"));
@@ -99,6 +106,7 @@ void TestSetup3D() {
 	building->position.y = -9.8f;
 	building->rotation.x = 270.0f;
 	building->scale *= 10.0f;
+	building->rotation.z = 180.0f;
 	gameObjects.push_back(building);
 
 	// Box
@@ -112,6 +120,7 @@ void TestSetup3D() {
 	// Colored box
 	GameObject* colorBox = new GameObject();
 	colorBox->model = Model::getModel("colorbox");
+	colorBox->model->setTexture(Texture::getTexture("box"));
 	colorBox->position.x = -20.0f;
 	colorBox->position.y = -4.0f;
 	colorBox->position.z = 20.0f;
@@ -128,15 +137,15 @@ void TestSetup3D() {
 	gameObjects.push_back(ground);
 
 	// Player
-	GameObject* player = new Player();
-	gameObjects.push_back(player);
+	/*GameObject* player = new Player();
+	gameObjects.push_back(player);*/
 
 	// GUI
 	gui = new GUI();
 	gui->setOrtho2D(1280, 720);
 
 	// Sun
-	GameObject* sun = new Sun();
+	sun = new Sun();
 	gameObjects.push_back(sun);
 
 	// Roads
@@ -160,25 +169,37 @@ void TestSetup3D() {
 			gameObjects.push_back(tr);
 		}
 	}
+
+	television = new Television();
+	television->create();
 }
 
-void initScene()
-{	
+void initScene() {	
 	TestSetup3D();
 }
 
 void renderScene3D() {
+	// AssImp
+	Model::BindModelsVAO();
+
 	// Get Shader attributes' locations
 	int projectionMatrixLocation = Shader::shader->getUniformLocation("projectionMatrix");
 	int viewMatrixLocation = Shader::shader->getUniformLocation("viewMatrix");
+	// Render to Television
+	television->startDrawing();
+	// Draw objects
+	for (int i = 0; i < (int)gameObjects.size(); ++i) {
+		gameObjects[i]->draw();
+	}
 
-	// MVP
+	// Go back
+	television->stopDrawing();
+
+
 	Camera* camera = Camera::mainCamera;
 	glUniformMatrix4fv(projectionMatrixLocation, 1, GL_FALSE, &camera->getProjectionMatrix()[0][0]);
 	glUniformMatrix4fv(viewMatrixLocation, 1, GL_FALSE, &camera->getViewMatrix()[0][0]);
 
-	// AssImp
-	Model::BindModelsVAO();
 
 	// Update objects
 	int len = gameObjects.size();
@@ -191,9 +212,11 @@ void renderScene3D() {
 		gameObjects[i]->draw();
 	}
 
+	// Draw Cinema
+	television->draw();
+
 }
 
-void renderScene(void)
-{
+void renderScene(void) {
 	renderScene3D();
 }

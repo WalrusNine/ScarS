@@ -20,6 +20,25 @@ Texture::Texture(std::string name) {
 	this->name = name;
 }
 
+void Texture::createEmptyTexture(int width, int height, int bpp, GLenum format) {
+	glGenTextures(1, &textureHandle);
+	glBindTexture(GL_TEXTURE_2D, textureHandle);
+	if (format == GL_RGBA || format == GL_BGRA)
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, format, GL_UNSIGNED_BYTE, NULL);
+	// We must handle this because of internal format parameter
+	else if (format == GL_RGB || format == GL_BGR)
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, format, GL_UNSIGNED_BYTE, NULL);
+	else
+		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, NULL);
+
+	glGenSamplers(1, &samplerHandle);
+
+	this->width = width;
+	this->height = height;
+	this->bpp = bpp;
+	this->mipMapsGenerated = true;
+}
+
 void Texture::createFromData(GLubyte* data, int inWidth, int inHeight, int inBpp, GLenum format, bool generateMipMaps, bool pixelStore) {
 	// Generate an OpenGL texture ID for this texture
 	glGenTextures(1, &textureHandle);
@@ -123,14 +142,18 @@ void Texture::setFiltering(int in_magnification, int in_minification) {
 	// Set magnification filter
 	if (in_magnification == TEXTURE_FILTER_MAG_NEAREST)
 		glSamplerParameteri(samplerHandle, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	else if (in_magnification == TEXTURE_FILTER_MAG_BILINEAR)
+	else if (in_magnification == TEXTURE_FILTER_MAG_BILINEAR) {
 		glSamplerParameteri(samplerHandle, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	}
 
 	// Set minification filter
 	if (in_minification == TEXTURE_FILTER_MIN_NEAREST)
 		glSamplerParameteri(samplerHandle, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	else if (in_minification == TEXTURE_FILTER_MIN_BILINEAR)
+	else if (in_minification == TEXTURE_FILTER_MIN_BILINEAR) {
 		glSamplerParameteri(samplerHandle, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	}
 	else if (in_minification == TEXTURE_FILTER_MIN_NEAREST_MIPMAP)
 		glSamplerParameteri(samplerHandle, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
 	else if (in_minification == TEXTURE_FILTER_MIN_BILINEAR_MIPMAP)

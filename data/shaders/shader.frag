@@ -34,6 +34,8 @@ uniform directional_light sunlight;
 uniform spotlight left_spotlight;
 uniform spotlight right_spotlight;
 
+
+
 vec4 get_spotlight_color (const spotlight s, vec3 world_pos) {
 	// If flashlight isn't turned on, return no color
 	if(s.isOn == 0) return vec4(0.0, 0.0, 0.0, 0.0);

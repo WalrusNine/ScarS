@@ -12,7 +12,7 @@ using namespace glm;
 Camera* Camera::mainCamera;
 
 Camera::Camera() : GameObject::GameObject() {
-	position = vec3(0, 0, 40);
+	position = vec3(0, 0, 1);
 	
 	// 180 degrees = Pi = 3.14
 	horizontalAngle = 3.14f;

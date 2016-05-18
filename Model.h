@@ -23,6 +23,8 @@ public:
 
 	static void addModel(Model* m);
 
+	void setTexture(Texture* t, GLenum drawmode = GL_TRIANGLES);
+
 	void RenderModelBumpMap(Shader* s);
 	static std::vector<Model*> models;
 	void render();

@@ -25,6 +25,7 @@ public:
 	~Texture();
 
 	void createFromData(GLubyte* data, int width, int height, int bpp, GLenum format, bool generateMipMaps, bool pixelStore);
+	void createEmptyTexture(int width, int height, int bpp, GLenum format);
 	bool LoadTexture2D(std::string filepath, bool generateMipMaps = false);
 	void UnloadTexture();
 
@@ -35,7 +36,7 @@ public:
 	void setSamplerParameter(GLenum parameter, GLenum value);
 
 	GLuint getTextureHandle();
-	void bind(GLenum = 0);
+	virtual void bind(GLenum = 0);
 
 	std::string getPath();
 	std::string getName();
