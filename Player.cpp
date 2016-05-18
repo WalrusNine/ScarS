@@ -3,9 +3,7 @@
 #include <glm\gtx\string_cast.hpp>
 
 
-Player::Player() {
-	GameObject::GameObject();
-
+Player::Player() : GameObject("Player") {
 	movementSpeed = 20.0f;
 	steerAngle = 0.0f;
 	steerSpeed = 50.0f;

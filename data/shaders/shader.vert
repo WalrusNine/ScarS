@@ -10,11 +10,13 @@ uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 modelMatrix;
 uniform mat4 normalMatrix;
+uniform mat4 depthBiasMVP;
 
 smooth out vec2 s_coord;
 smooth out vec4 s_color;
 smooth out vec3 s_normal;
 smooth out vec3 s_position;
+smooth out vec4 ShadowCoord;
 
 void main()
 {
@@ -32,4 +34,7 @@ void main()
 	// Normal
 	vec4 temp_normal = normalMatrix * vec4(a_normal, 0.0);
 	s_normal = temp_normal.xyz;
+	
+	// Shadow
+	ShadowCoord = depthBiasMVP * world_position;
 }

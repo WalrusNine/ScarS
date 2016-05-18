@@ -8,7 +8,9 @@
 class Television : public GameObject {
 
 public:
-	void draw() override;
+	Television();
+
+	void draw(bool shadow = false) override;
 	void update() override;
 	void create();
 

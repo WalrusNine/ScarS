@@ -8,81 +8,44 @@
 #include "Texture.h"
 #include "VertexBufferObject.h"
 
-class CharacterInfo
-{
 
-public:
-	// Advance is the whole space occupied by the letter, so that
-	// the next letter starts at the end of advance
-	float ax; // advance.x
-	float ay; // advance.y
-
-	// Width and height are the actual size of the letter
-	float bw; // bitmap.width;
-	float bh; // bitmap.rows;
-
-	// Distance from the glyph origin
-	float bl; // bitmap_left;
-	float bt; // bitmap_top;
-
-	float tx; // x offset of glyph in texture coordinates
-	float ty; // y offset of glyph in texture coordinates
-};
-
-class Atlas
-{
-
-public:
-	GLuint tex;
-
-	unsigned int w;
-	unsigned int h;
-
-	std::vector<CharacterInfo> charInfo;
-
-	Atlas();
-};
+#define CHARS_PER_TEXTURE 1024
+#define CHARS_PER_TEXTUREROOT 32
 
 class FreeTypeFont
 {
-
 public:
+	bool LoadFont(std::string sFile, int iPXSize, int iMaxCharSupport = 128);
+	bool LoadSystemFont(std::string sName, int iPXSize, int iMaxCharSupport = 128);
 
-	bool loadFont(std::string filepath, int pxSize);
-	bool loadFont2(std::string filepath, int pxSize);
-	bool loadSystemFont(std::string name, int pxSize);
+	int GetTextWidth(std::string sText, int iPXSize);
 
-	int getTextWidth(std::string text, int pxSize);
+	void Print(std::string sText, int x, int y, int iPXSize = -1);
+	//void Print(wstring sText, int x, int y, int iPXSize = -1);
+	void PrintFormatted(int x, int y, int iPXSize, char* sText, ...);
+	void PrintFormatted(int x, int y, int iPXSize, wchar_t* sText, ...);
 
-	void print(std::string text, int x, int y, int pxSize = 32);
-	//void print(std::string text, float x, float y, float sx, float sy);
+	void DeleteFont();
 
-	void releaseFont();
-
-	void setShaderProgram(Shader* shader);
+	void SetShaderProgram(Shader* a_shShaderProgram);
 
 	FreeTypeFont();
-
 private:
+	void CreateChar(int iIndex, GLubyte* bData);
 
-	void createChar(int index);
+	std::vector<Texture> tCharTextures;
+	std::vector<int> iAdvX, iAdvY;
+	std::vector<int> iBearingX, iBearingY;
+	std::vector<int> iCharWidth, iCharHeight;
+	int iLoadedPixelSize, iNewLine;
+	int iOneCharSquareSize;
 
-	Texture charTextures[256];
-	int advX[256], advY[256];
-	int bearingX[256], bearingY[256];
-	int charWidth[256], charHeight[256];
-	int loadedPixelSize, newLine;
-
-	bool isLoaded;
+	bool bLoaded;
 
 	unsigned int vao;
 	VertexBufferObject vbo;
 
-	FT_Library lib;
-	FT_Face face;
-	Shader* shader;
-
-	Atlas* atlas;
-
-	Texture* mainTexture;
+	FT_Library ftLib;
+	FT_Face ftFace;
+	Shader* shShaderProgram;
 };

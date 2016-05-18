@@ -49,6 +49,15 @@ Model::Model(std::string name) {
 	drawMode = GL_TRIANGLES;
 }
 
+void Model::ClearModels() {
+	vbo.deleteVBO();
+	glDeleteVertexArrays(1, &vao);
+
+	for (int i = 0; i < (int)Texture::textures.size(); ++i) {
+		Texture::textures[i]->UnloadTexture();
+	}
+}
+
 bool Model::LoadModelFromFile(char* filepath) {
 	// Create static variables if didn't yet
 	if (vbo.getBufferID() == 0) {

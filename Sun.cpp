@@ -1,6 +1,6 @@
 #include "Sun.h"
 
-Sun::Sun() : GameObject::GameObject() {
+Sun::Sun() : GameObject("Sun") {
 	angle = 45.0f;
 	float rad_angle = glm::radians(angle);
 
@@ -27,7 +27,7 @@ void Sun::update() {
 
 }
 
-void Sun::draw() {
+void Sun::draw(bool shadow) {
 	// Set light color
 	int loc = 0;
 	loc = Shader::shader->getUniformLocation("sunlight.color");
@@ -41,4 +41,8 @@ void Sun::draw() {
 	loc = Shader::shader->getUniformLocation("sunlight.direction");
 	vec3 dir = -glm::normalize(position);
 	glUniform3fv(loc, 1, &dir[0]);
+}
+
+glm::vec3 Sun::getDirection() {
+	return -glm::normalize(position);
 }

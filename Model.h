@@ -7,8 +7,7 @@
 #include "VertexBufferObject.h"
 #include "Geometry.h"
 
-class Model
-{
+class Model {
 
 public:
 	bool LoadModelFromFile(char* filepath);
@@ -33,6 +32,7 @@ public:
 	std::string getName();
 
 	Model(std::string name = "");
+	static void ClearModels();
 private:
 	bool isLoaded;
 

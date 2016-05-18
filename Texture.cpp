@@ -128,7 +128,7 @@ GLuint Texture::getTextureHandle(){
 Texture::~Texture() {
 }
 
-void Texture::bind(GLenum textureUnit) {
+void Texture::bind(int textureUnit) {
 	glActiveTexture(GL_TEXTURE0 + textureUnit);
 	glBindTexture(GL_TEXTURE_2D, textureHandle);
 	glBindSampler(textureUnit, samplerHandle);

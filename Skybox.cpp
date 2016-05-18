@@ -5,8 +5,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-Skybox::Skybox()
-{
+Skybox::Skybox() : GameObject("Skybox") {
 	position = Camera::mainCamera->getPosition();
 	rotation = vec3(0.0f);
 	scale = vec3(1.0f);
@@ -14,8 +13,7 @@ Skybox::Skybox()
 	model = nullptr;
 }
 
-Skybox::~Skybox()
-{
+Skybox::~Skybox() {
 
 }
 
@@ -23,8 +21,8 @@ void Skybox::update() {
 	position = Camera::mainCamera->getPosition();
 }
 
-void Skybox::draw() {
-	if (model != nullptr) {
+void Skybox::draw(bool shadow) {
+	if (model != nullptr && !shadow) {
 		// Depth mask = 0 => draw before anything,
 		// so that it always stay away from anything in the scene
 		glDepthMask(0);

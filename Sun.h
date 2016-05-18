@@ -8,7 +8,8 @@ public:
 	Sun();
 
 	void update() override;
-	void draw() override;
+	void draw(bool shadow = false) override;
+	glm::vec3 getDirection();
 
 private:
 

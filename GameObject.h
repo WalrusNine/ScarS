@@ -9,15 +9,14 @@ using namespace glm;
 #include "FPSController.h"
 #include "InputController.h"
 
-class GameObject
-{
+class GameObject {
 
 public:
-	GameObject();
+	GameObject(std::string name);
 
 	// Basic object
 	virtual void update();
-	virtual void draw();
+	virtual void draw(bool shadow = false);
 
 	void setTransparent(bool b);
 	void setEnabled(bool b);
@@ -35,6 +34,11 @@ public:
 	// Model
 	Model* model;
 
+	static std::vector<GameObject*> gameObjects;
+	static GameObject* sun;
+	static GameObject* skyBox;
+	static GameObject* GetGameObjectWithName(std::string name);
+
 private:
 	// Model Matrix
 	mat4 mMatrix;
@@ -44,5 +48,7 @@ private:
 
 	bool enabled;
 	bool transparent;
+
+	std::string name;
 
 };

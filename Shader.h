@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#define NUMBER_OF_SHADER_TYPES 5
+#define NUMBER_OF_SHADER_TYPES 4
 
 class Shader {
 
@@ -19,9 +19,22 @@ public:
 	int getUniformLocation(std::string varName);
 	int getAttribLocation(std::string varName);
 
-	void setUniform(std::string name, glm::mat4 matrix);
-	void setUniform(std::string name, int value);
-	void setAttribute(std::string name, glm::vec2 vec);
+	void SetUniform(std::string name, glm::vec2 * vectors, int count);
+	void SetUniform(std::string name, const glm::vec2 vector);
+	void SetUniform(std::string name, glm::vec3 * vectors, int count);
+	void SetUniform(std::string name, const glm::vec3 vector);
+	void SetUniform(std::string name, glm::vec4 * vectors, int count);
+	void SetUniform(std::string name, const glm::vec4 vector);
+	void SetUniform(std::string name, glm::mat3 * matrices, int count);
+	void SetUniform(std::string name, const glm::mat3 matrix);
+	void SetUniform(std::string name, glm::mat4 * matrices, int count);
+	void SetUniform(std::string name, glm::mat4 matrix);
+	void SetUniform(std::string name, int * values, int count);
+	void SetUniform(std::string name, int value);
+	void SetUniform(std::string name, float * values, int count);
+	void SetUniform(std::string name, const float value);
+
+	void SetAttribute(std::string name, glm::vec2 vec);
 
 	static Shader* shader;
 

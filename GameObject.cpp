@@ -1,6 +1,10 @@
 #include "GameObject.h"
 
-GameObject::GameObject() {
+std::vector<GameObject*> GameObject::gameObjects;
+GameObject* GameObject::sun;
+GameObject* GameObject::skyBox;
+
+GameObject::GameObject(std::string name) {
 	position = vec3(0.0f);
 	rotation = vec3(0.0f);
 	scale = vec3(1.0f);
@@ -11,13 +15,15 @@ GameObject::GameObject() {
 
 	enabled = true;
 	transparent = false;
+
+	this->name = name;
 }
 
 void GameObject::update() {
 
 }
 
-void GameObject::draw() {
+void GameObject::draw(bool shadow) {
 	if (enabled) {
 		if (model != nullptr) {
 			// Update Model Matrix
@@ -36,8 +42,11 @@ void GameObject::draw() {
 			nMatrix = glm::transpose(glm::inverse(mMatrix));
 
 			// Set uniforms
-			Shader::shader->setUniform("modelMatrix", mMatrix);
-			Shader::shader->setUniform("normalMatrix", nMatrix);
+			Shader::shader->SetUniform("modelMatrix", mMatrix);
+			Shader::shader->SetUniform("normalMatrix", nMatrix);
+			if (shadow) {
+				Shader::shader->SetUniform("depthModel", mMatrix);
+			}
 
 			// Transparency
 			if (transparent) {
@@ -71,4 +80,13 @@ bool GameObject::isTransparent() {
 
 bool GameObject::isEnabled() {
 	return enabled;
+}
+
+GameObject * GameObject::GetGameObjectWithName(std::string name) {
+	int len = gameObjects.size();
+	for (int i = 0; i < len; ++i) {
+		if (gameObjects[i]->name == name) return gameObjects[i];
+	}
+
+	return nullptr;
 }

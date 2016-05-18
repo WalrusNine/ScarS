@@ -1,71 +1,25 @@
 #include "Television.h"
 
 #include "Camera.h"
-/*
-glm::vec3 vCinema[4] =
-{
-	glm::vec3(-30.0f, 40.0f, -70.0f), glm::vec3(-30.0f, 10.0f, -70.0f),
-	glm::vec3(30.0f, 40.0f, -70.0f), glm::vec3(30.0f, 10.0f, -70.0f)
-};
 
-glm::vec2 vCinemaCoords[4] =
-{
-	glm::vec2(0, 1), glm::vec2(0, 0), glm::vec2(1, 1), glm::vec2(1, 0)
-};*/
+Television::Television() : GameObject("television") {
 
-glm::vec3 vCinema[6] =
-{
-	// Triangle 1
-	{ -1.0f, 0.0f, -1.0f },{ 1.0f, 0.0f, -1.0f },{ 1.0f, 0.f, 1.0f },
-	// Triangle 2
-	{ 1.0f, 0.f, 1.0f },{ -1.0f, 0.f, 1.0f },{ -1.0f, 0.f, -1.0f }
-};
+}
 
-glm::vec2 vCinemaCoords[6] =
-{
-	// Triangle 1
-	{ 0.0f, 1.0f },{ 1.0f, 1.0f },{ 1.0f, 0.0f },
-	// Triangle 2
-	{ 1.0f, 0.0f },{ 0.0f, 0.0f },{ 0.0f, 1.0f },
-};
-
-void Television::draw() {
-	//glBindVertexArray(vao);
-	//frameBuffer.BindFramebufferTexture(0, true);
-	//glDrawArrays(GL_TRIANGLES, 0, 6);
-	model->render();
+void Television::draw(bool shadow) {
+	GameObject::draw(shadow);
 }
 
 void Television::create() {
 	model = Model::getModel("panel");
-	/*vbo.createVBO({});
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
-	vbo.bindVBO();
-	for (int i = 0; i < 6; ++i) {
-		vbo.addData(&vCinema[i], sizeof(glm::vec3));
-		vbo.addData(&vCinemaCoords[i], sizeof(glm::vec2));
-		glm::vec3 vNormal(0, 0, 1);
-		vbo.addData(&vNormal, sizeof(glm::vec3));
-		glm::vec4 color(1, 1, 1, 1);
-		vbo.addData(&color, sizeof(glm::vec4));
-	}
-	vbo.uploadDataToGPU();
-	// Vertex positions
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec3) + sizeof(glm::vec2) + sizeof(glm::vec4), 0);
-	// Texture coordinates
-	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec3) + sizeof(glm::vec2) + sizeof(glm::vec4), (void*)sizeof(glm::vec3));
-	// Normal vectors
-	glEnableVertexAttribArray(3);
-	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec3) + sizeof(glm::vec2) + sizeof(glm::vec4), (void*)(sizeof(glm::vec3) + sizeof(glm::vec2)));
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec3) + sizeof(glm::vec2) + sizeof(glm::vec4), (void*)(2 * sizeof(glm::vec3) + sizeof(glm::vec2)));
-	
-	Model::BindModelsVAO();*/
+	position.x = 15;
+	position.z = 0;
+	position.y = 10;
+	rotation.x = 90;
+	scale.x *= 10;
+	scale.z *= 10;
 
-	frameBuffer.CreateFramebufferWithTexture(512, 256);
+	frameBuffer.CreateFramebufferWithTexture(1024, 1024);
 	frameBuffer.AddDepthBuffer();
 	frameBuffer.SetFramebufferTextureFiltering(TEXTURE_FILTER_MAG_BILINEAR, TEXTURE_FILTER_MIN_TRILINEAR);
 
@@ -81,7 +35,9 @@ void Television::startDrawing() {
 	// Use television's parameter to set view/projection
 	glUniformMatrix4fv(projectionMatrixLocation, 1, GL_FALSE, &frameBuffer.CalculateProjectionMatrix(45.0f, 0.001f, 1000.0f)[0][0]);
 
-	glm::mat4 televisionView = Camera::mainCamera->getViewMatrix();//glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::vec3 cameraPos = position + glm::vec3(.0f, .0f, -5.0f);
+
+	glm::mat4 televisionView = glm::lookAt(cameraPos, cameraPos + glm::vec3(0.0f, 0.0f, 10.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	glUniformMatrix4fv(viewMatrixLocation, 1, GL_FALSE, &televisionView[0][0]);
 }
 

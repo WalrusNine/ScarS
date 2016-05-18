@@ -6,7 +6,7 @@ class FrameBufferTexture : public Texture {
 
 
 public:
-	void bind(GLenum = 0) override;
+	void bind(int = 0) override;
 
 
 };

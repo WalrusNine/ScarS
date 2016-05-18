@@ -36,7 +36,7 @@ public:
 	void setSamplerParameter(GLenum parameter, GLenum value);
 
 	GLuint getTextureHandle();
-	virtual void bind(GLenum = 0);
+	virtual void bind(int = 0);
 
 	std::string getPath();
 	std::string getName();

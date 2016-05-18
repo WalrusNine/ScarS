@@ -11,7 +11,7 @@
 #include "GameObject.h"
 #include "FPSController.h"
 #include "InputController.h"
-#include "ObjectTests.h"
+#include "Scene.h"
 #include "Shader.h"
 #include "Camera.h"
 #include "Texture.h"
@@ -91,9 +91,6 @@ bool initialize(int argc, char* argv[]) {
 	glEnable(GL_DEPTH_TEST);
 	glClearDepth(1.0);
 
-	//TEST
-	initScene();
-
 	return true;
 }
 
@@ -101,6 +98,7 @@ void mainLoop() {
 	//Get controllers
 	FPSController* fpsController = new FPSController();
 	InputController* inputController = new InputController(*window);
+	Scene* scene = new Scene();
 
 	//Main Loop
 	do
@@ -113,13 +111,11 @@ void mainLoop() {
 		//Update InputController
 		inputController->update();
 
-		//printf("Delta Time: %.5f, FPS: %.1f\n", deltaTime, 1.0 / deltaTime);
-
 		//Clear color buffer  
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		//Render
-		renderScene();
+		scene->render();
 
 		//Swap buffers  
 		glfwSwapBuffers(window);
@@ -133,7 +129,8 @@ void mainLoop() {
 
 	delete fpsController;
 	delete inputController;
-	//delete shader;
+	delete scene;
+	delete Shader::shader;
 }
 
 void finalize() {

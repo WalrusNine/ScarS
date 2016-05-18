@@ -1,6 +1,6 @@
 #include "Wolf.h"
 
-Wolf::Wolf() {
+Wolf::Wolf() : GameObject("Wolf") {
 	position = vec3(0, 0, 10);
 	rotation = vec3(0.0f);
 	scale = vec3(1.0f);

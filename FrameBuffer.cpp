@@ -25,11 +25,10 @@ render to.
 /*---------------------------------------------*/
 
 bool FrameBuffer::CreateFramebufferWithTexture(int w, int h) {
-	if (framebuffer != 0)return false;
+	if (framebuffer != 0) return false;
 
 	glGenFramebuffers(1, &framebuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-	//glDrawBuffer(GL_COLOR_ATTACHMENT0);
 	framebufferTex = new FrameBufferTexture();
 	framebufferTex->createEmptyTexture(w, h, 24, GL_RGB);
 

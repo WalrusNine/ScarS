@@ -19,15 +19,13 @@ Shader::Shader(std::string vertex, std::string fragment) {
 
 	this->shadersFilenames[0] = new std::string(vertex);
 	this->shadersFilenames[1] = new std::string(fragment);
-	this->shadersFilenames[2] = NULL;
-	this->shadersFilenames[3] = NULL;
-	this->shadersFilenames[4] = NULL;
+	this->shadersFilenames[2] = new std::string("shadowMapper.frag");
+	this->shadersFilenames[3] = new std::string("shadowMapper.vert");
 
 	this->shaderTypes[0] = GL_VERTEX_SHADER;
 	this->shaderTypes[1] = GL_FRAGMENT_SHADER;
-	this->shaderTypes[2] = GL_GEOMETRY_SHADER;
-	this->shaderTypes[3] = GL_TESS_CONTROL_SHADER;
-	this->shaderTypes[4] = GL_TESS_EVALUATION_SHADER;
+	this->shaderTypes[2] = GL_FRAGMENT_SHADER;
+	this->shaderTypes[3] = GL_VERTEX_SHADER;
 
 	shader = this;
 }
@@ -200,23 +198,6 @@ int Shader::getAttribLocation(std::string varName) {
 	}
 }
 
-void Shader::setUniform(std::string name, glm::mat4 matrix)
-{
-	GLuint loc = getUniformLocation(name);
-	glUniformMatrix4fv(loc, 1, GL_FALSE, (GLfloat*)&matrix);
-}
-
-void Shader::setUniform(std::string name, int value)
-{
-	GLuint loc = getUniformLocation(name);
-	glUniform1i(loc, value);
-}
-
-void Shader::setAttribute(std::string name, glm::vec2 vec) {
-	GLuint loc = getAttribLocation(name);
-	glUniformMatrix4fv(loc, 1, GL_FALSE, (GLfloat*)&vec);
-}
-
 void Shader::release() {
 	for (int i = 0; i < NUMBER_OF_SHADER_TYPES; ++i) {
 		if (shadersHandles[i]) {
@@ -231,4 +212,89 @@ void Shader::release() {
 		programHandle = 0;
 
 	}
+}
+
+void Shader::SetAttribute(std::string name, glm::vec2 vec) {
+	GLuint loc = getAttribLocation(name);
+	glUniformMatrix4fv(loc, 1, GL_FALSE, (GLfloat*)&vec);
+}
+
+// Setting floats
+
+void Shader::SetUniform(std::string name, float* values, int count) {
+	int loc = getUniformLocation(name);
+	glUniform1fv(loc, count, values);
+}
+
+void Shader::SetUniform(std::string name, const float value) {
+	int loc = getUniformLocation(name);
+	glUniform1fv(loc, 1, &value);
+}
+
+// Setting vectors
+
+void Shader::SetUniform(std::string name, glm::vec2* vectors, int count) {
+	int loc = getUniformLocation(name);
+	glUniform2fv(loc, count, (GLfloat*)vectors);
+}
+
+void Shader::SetUniform(std::string name, const glm::vec2 vector) {
+	int loc = getUniformLocation(name);
+	glUniform2fv(loc, 1, (GLfloat*)&vector);
+}
+
+void Shader::SetUniform(std::string name, glm::vec3* vectors, int count) {
+	int loc = getUniformLocation(name);
+	glUniform3fv(loc, count, (GLfloat*)vectors);
+}
+
+void Shader::SetUniform(std::string name, const glm::vec3 vector) {
+	int loc = getUniformLocation(name);
+	glUniform3fv(loc, 1, (GLfloat*)&vector);
+}
+
+void Shader::SetUniform(std::string name, glm::vec4* vectors, int count) {
+	int loc = getUniformLocation(name);
+	glUniform4fv(loc, count, (GLfloat*)vectors);
+}
+
+void Shader::SetUniform(std::string name, const glm::vec4 vector) {
+	int loc = getUniformLocation(name);
+	glUniform4fv(loc, 1, (GLfloat*)&vector);
+}
+
+// Setting 3x3 matrices
+
+void Shader::SetUniform(std::string name, glm::mat3* matrices, int count) {
+	int loc = getUniformLocation(name);
+	glUniformMatrix3fv(loc, count, GL_FALSE, (GLfloat*)matrices);
+}
+
+void Shader::SetUniform(std::string name, const glm::mat3 matrix) {
+	int loc = getUniformLocation(name);
+	glUniformMatrix3fv(loc, 1, GL_FALSE, (GLfloat*)&matrix);
+}
+
+// Setting 4x4 matrices
+
+void Shader::SetUniform(std::string name, glm::mat4* matrices, int count) {
+	int loc = getUniformLocation(name);
+	glUniformMatrix4fv(loc, count, GL_FALSE, (GLfloat*)matrices);
+}
+
+void Shader::SetUniform(std::string name, glm::mat4 matrix) {
+	GLuint loc = getUniformLocation(name);
+	glUniformMatrix4fv(loc, 1, GL_FALSE, (GLfloat*)&matrix);
+}
+
+// Setting integers
+
+void Shader::SetUniform(std::string name, int* values, int count) {
+	int loc = getUniformLocation(name);
+	glUniform1iv(loc, count, values);
+}
+
+void Shader::SetUniform(std::string name, int value) {
+	GLuint loc = getUniformLocation(name);
+	glUniform1i(loc, value);
 }
