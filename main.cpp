@@ -86,6 +86,7 @@ bool initialize(int argc, char* argv[]) {
 	glDepthFunc(GL_LESS);
 	// Cull triangles which normal is not towards the camera
 	//glEnable(GL_CULL_FACE);
+	//glCullFace(GL_FRONT);
 
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_DEPTH_TEST);
@@ -136,7 +137,7 @@ void mainLoop() {
 void finalize() {
 	//Close OpenGL window and terminate GLFW  
 	glfwDestroyWindow(window);
-	//Finalize and clean up GLFW  
+	//Finalize and clean up GLFW
 	glfwTerminate();
 }
 

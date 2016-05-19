@@ -13,9 +13,9 @@ std::vector<glm::vec3> planeVerticesPosition = {
 
 std::vector<glm::vec2> planeVerticesUV = {
 	// Triangle 1
-	{ 0.0f, 1.0f }, { 1.0f, 1.0f }, { 1.0f, 0.0f },
+	{ 1.0f, 1.0f }, { 0.0f, 1.0f }, { 0.0f, 0.0f },
 	// Triangle 2
-	{ 1.0f, 0.0f }, { 0.0f, 0.0f }, { 0.0f, 1.0f },
+	{ 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f },
 };
 
 // Cube

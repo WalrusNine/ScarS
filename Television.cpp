@@ -14,12 +14,12 @@ void Television::create() {
 	model = Model::getModel("panel");
 	position.x = 15;
 	position.z = 0;
-	position.y = 10;
+	position.y = -5.f;
 	rotation.x = 90;
-	scale.x *= 10;
-	scale.z *= 10;
+	scale.x *= 5;
+	scale.z *= 5;
 
-	frameBuffer.CreateFramebufferWithTexture(1024, 1024);
+	frameBuffer.CreateFramebufferWithTexture(1024, 720);
 	frameBuffer.AddDepthBuffer();
 	frameBuffer.SetFramebufferTextureFiltering(TEXTURE_FILTER_MAG_BILINEAR, TEXTURE_FILTER_MIN_TRILINEAR);
 
@@ -35,7 +35,7 @@ void Television::startDrawing() {
 	// Use television's parameter to set view/projection
 	glUniformMatrix4fv(projectionMatrixLocation, 1, GL_FALSE, &frameBuffer.CalculateProjectionMatrix(45.0f, 0.001f, 1000.0f)[0][0]);
 
-	glm::vec3 cameraPos = position + glm::vec3(.0f, .0f, -5.0f);
+	glm::vec3 cameraPos = position + glm::vec3(.0f, -1.0f, -5.0f);
 
 	glm::mat4 televisionView = glm::lookAt(cameraPos, cameraPos + glm::vec3(0.0f, 0.0f, 10.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	glUniformMatrix4fv(viewMatrixLocation, 1, GL_FALSE, &televisionView[0][0]);

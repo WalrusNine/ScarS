@@ -31,6 +31,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 
+#define WITH_PLAYER true
+
 //GUI* gui;
 Shadow* shadow;
 
@@ -41,10 +43,14 @@ Scene::Scene() {
 void Scene::init() {
 	GameObject::gameObjects.reserve(1);
 	// Create Camera
-	//Camera::mainCamera = Camera::createCamera();
-	//gameObjects.push_back((GameObject*)Camera::mainCamera);
-	SkyCamera::mainCamera = SkyCamera::createCamera();
-	GameObject::gameObjects.push_back((GameObject*)SkyCamera::mainCamera);
+	if (WITH_PLAYER) {
+		Camera::mainCamera = Camera::createCamera();
+		GameObject::gameObjects.push_back((GameObject*)Camera::mainCamera);
+	}
+	else {
+		SkyCamera::mainCamera = SkyCamera::createCamera();
+		GameObject::gameObjects.push_back((GameObject*)SkyCamera::mainCamera);
+	}
 
 	// Create Textures
 	Texture::addTexture(Texture::createTexture("data\\textures\\golddiag.jpg", TEXTURE_FILTER_MAG_BILINEAR, TEXTURE_FILTER_MIN_BILINEAR_MIPMAP, "golddiag", true));
@@ -140,8 +146,10 @@ void Scene::init() {
 	GameObject::gameObjects.push_back(ground);
 
 	// Player
-	/*GameObject* player = new Player();
-	GameObject::gameObjects.push_back(player);*/
+	if (WITH_PLAYER) {
+		GameObject* player = new Player();
+		GameObject::gameObjects.push_back(player);
+	}
 
 	// GUI
 	/*gui = new GUI();

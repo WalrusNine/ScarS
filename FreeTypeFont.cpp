@@ -9,32 +9,31 @@
 using namespace std;
 
 FreeTypeFont::FreeTypeFont() {
-	bLoaded = false;
+	is_loaded = false;
 }
-
 /*
+
 inline int next_p2(int n) { int res = 1; while (res < n)res <<= 1; return res; }
 
-void FreeTypeFont::CreateChar(int iIndex, GLubyte* bData)
-{
-	FT_Load_Glyph(ftFace, FT_Get_Char_Index(ftFace, iIndex), FT_LOAD_DEFAULT);
+void FreeTypeFont::CreateChar(int index, GLubyte* data) {
+	FT_Load_Glyph(face, FT_Get_Char_Index(face, index), FT_LOAD_DEFAULT);
 
-	FT_Render_Glyph(ftFace->glyph, FT_RENDER_MODE_NORMAL);
-	FT_Bitmap* pBitmap = &ftFace->glyph->bitmap;
+	FT_Render_Glyph(face->glyph, FT_RENDER_MODE_NORMAL);
+	FT_Bitmap* bitmap = &face->glyph->bitmap;
 
-	int iW = pBitmap->width, iH = pBitmap->rows;
+	int w = bitmap->width, h = bitmap->rows;
 
 	// Some characters when rendered, are somehow just bigger than our desired pixel size
 	// In this case, I just ignore them - another solution is to set iOneCharSquareSize in LoadFont function
 	// to twice the size (just multiply by 2 and you're safe)
-	if (iW > iOneCharSquareSize)
+	if (w > oneCharSquareSize)
 		return;
-	if (iH > iOneCharSquareSize)
+	if (h > oneCharSquareSize)
 		return;
 
-	int iRow = (iIndex%CHARS_PER_TEXTURE) / CHARS_PER_TEXTUREROOT;
-	int iCol = (iIndex%CHARS_PER_TEXTURE) % CHARS_PER_TEXTUREROOT;
-	int iOneTextureByteRowSize = CHARS_PER_TEXTUREROOT*iOneCharSquareSize;
+	int row = (index % CHARS_PER_TEXTURE) / CHARS_PER_TEXTUREROOT;
+	int col = (index % CHARS_PER_TEXTURE) % CHARS_PER_TEXTUREROOT;
+	int oneTextureByteRowSize = CHARS_PER_TEXTUREROOT * oneCharSquareSize;
 
 	// Copy glyph data
 	FOR(ch, iH)memcpy(bData + iRow*iOneTextureByteRowSize*iOneCharSquareSize + iCol*iOneCharSquareSize + ch*iOneTextureByteRowSize, pBitmap->buffer + (iH - ch - 1)*iW, iW);
@@ -139,70 +138,64 @@ bool FreeTypeFont::LoadFont(string sFile, int iPXSize, int iMaxCharSupport)
 }
 
 
-bool FreeTypeFont::LoadSystemFont(string sName, int iPXSize, int iMaxCharSupport)
-{
+bool FreeTypeFont::LoadSystemFont(string name, int pxSize, int maxCharSupport) {
 	char buf[512]; GetWindowsDirectory(buf, 512);
-	string sPath = buf;
-	sPath += "\\Fonts\\";
-	sPath += sName;
+	string path = buf;
+	path += "\\Fonts\\";
+	path += name;
 
-	return LoadFont(sPath, iPXSize, iMaxCharSupport);
+	return LoadFont(path, pxSize, maxCharSupport);
 }
 
 
-int FreeTypeFont::GetTextWidth(string sText, int iPXSize)
-{
-	int iResult = 0;
-	FOR(i, ESZ(sText))iResult += iAdvX[sText[i]];
+int FreeTypeFont::GetTextWidth(string text, int pxSize) {
+	int result = 0;
+	for (int i = 0; i < (int)text.size(); ++i)
+		result += advX[text[i]];
 
-	return iResult*iPXSize / iLoadedPixelSize;
+	return result*pxSize / loadedPixelSize;
 }
 
 
-void FreeTypeFont::Print(string sText, int x, int y, int iPXSize)
-{
-	if (!bLoaded)return;
-	int iLastBoundTexture = -1;
+void FreeTypeFont::Print(string text, int x, int y, int pxSize) {
+	if (!is_loaded) return;
+	int lastBoundTexture = -1;
 
 	glBindVertexArray(vao);
-	shShaderProgram->setUniform("gSampler", 0);
+	shader->SetUniform("gSampler", 0);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	int iCurX = x, iCurY = y;
-	if (iPXSize == -1)iPXSize = iLoadedPixelSize;
-	float fScale = float(iPXSize) / float(iLoadedPixelSize);
-	for (int i = 0; i < (int)sText.size(); ++i) {
-		if (sText[i] == '\n')
-		{
-			iCurX = x;
-			iCurY -= iNewLine*iPXSize / iLoadedPixelSize;
+	int curX = x, curY = y;
+	if (pxSize == -1) pxSize = loadedPixelSize;
+	float scale = float(pxSize) / float(loadedPixelSize);
+	for (int i = 0; i < (int)text.size(); ++i) {
+		if (text[i] == '\n') {
+			curX = x;
+			curY -= newLine*pxSize / loadedPixelSize;
 			continue;
 		}
-		int iIndex = int(sText[i]);
-		int iTextureNeeded = iIndex / CHARS_PER_TEXTURE;
-		if (iTextureNeeded != iLastBoundTexture)
-		{
-			iLastBoundTexture = iTextureNeeded;
-			tCharTextures[iTextureNeeded].bind();
+		int index = int(text[i]);
+		int textureNeeded = index / CHARS_PER_TEXTURE;
+		if (textureNeeded != lastBoundTexture) {
+			lastBoundTexture = textureNeeded;
+			charTextures[textureNeeded].bind();
 		}
-		iCurX += iBearingX[iIndex] * iPXSize / iLoadedPixelSize;
-		if (sText[i] != ' ')
-		{
-			glm::mat4 mModelView = glm::translate(glm::mat4(1.0f), glm::vec3(float(iCurX), float(iCurY), 0.0f));
-			mModelView = glm::scale(mModelView, glm::vec3(fScale));
-			shShaderProgram->setUniform("matrices.modelViewMatrix", mModelView);
+		curX += bearingX[index] * pxSize / loadedPixelSize;
+		if (text[i] != ' ') {
+			glm::mat4 modelView = glm::translate(glm::mat4(1.0f), glm::vec3(float(curX), float(curY), 0.0f));
+			modelView = glm::scale(modelView, glm::vec3(scale));
+			shader->SetUniform("matrices.modelViewMatrix", modelView);
 			// Draw character
-			glDrawArrays(GL_TRIANGLE_STRIP, iIndex * 4, 4);
+			glDrawArrays(GL_TRIANGLE_STRIP, index * 4, 4);
 		}
 
-		iCurX += (iAdvX[iIndex] - iBearingX[iIndex])*iPXSize / iLoadedPixelSize;
+		curX += (advX[index] - bearingX[index])*pxSize / loadedPixelSize;
 	}
 	glDisable(GL_BLEND);
 }
 
-void FreeTypeFont::Print(wstring sText, int x, int y, int iPXSize)
-{
-	if (!bLoaded)return;
+void FreeTypeFont::Print(wstring text, int x, int y, int pxSize) {
+	if (!is_loaded) return;
 	int iLastBoundTexture = -1;
 
 	glBindVertexArray(vao);
@@ -241,36 +234,33 @@ void FreeTypeFont::Print(wstring sText, int x, int y, int iPXSize)
 }
 
 
-void FreeTypeFont::PrintFormatted(int x, int y, int iPXSize, char* sText, ...)
-{
+void FreeTypeFont::PrintFormatted(int x, int y, int pxSize, char* text, ...) {
 	char buf[512];
 	va_list ap;
-	va_start(ap, sText);
-	vsprintf(buf, sText, ap);
+	va_start(ap, text);
+	vsprintf(buf, text, ap);
 	va_end(ap);
-	Print(buf, x, y, iPXSize);
+	Print(buf, x, y, pxSize);
 }
 
-void FreeTypeFont::PrintFormatted(int x, int y, int iPXSize, wchar_t* sText, ...)
-{
+void FreeTypeFont::PrintFormatted(int x, int y, int pxSize, wchar_t* text, ...) {
 	wchar_t buf[512];
 	va_list ap;
-	va_start(ap, sText);
-	vswprintf(buf, sText, ap);
+	va_start(ap, text);
+	vswprintf(buf, text, ap);
 	va_end(ap);
-	Print(buf, x, y, iPXSize);
+	Print(buf, x, y, pxSize);
 }
 
 
-void FreeTypeFont::DeleteFont()
-{
-	FOR(i, ESZ(tCharTextures))
-		tCharTextures[i].DeleteTexture();
-	vboData.DeleteVBO();
-	glDeleteVertexArrays(1, &uiVAO);
+void FreeTypeFont::DeleteFont() {
+	for (int i = 0; i < (int)charTextures.size(); ++i)
+		charTextures[i].UnloadTexture();
+	vbo.deleteVBO();
+	glDeleteVertexArrays(1, &vao);
 }
 
 
-void FreeTypeFont::SetShaderProgram(Shader* a_shShaderProgram) {
-	shShaderProgram = a_shShaderProgram;
+void FreeTypeFont::SetShaderProgram(Shader* s) {
+	shader = s;
 }*/

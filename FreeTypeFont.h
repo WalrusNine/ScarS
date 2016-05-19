@@ -8,44 +8,43 @@
 #include "Texture.h"
 #include "VertexBufferObject.h"
 
-
 #define CHARS_PER_TEXTURE 1024
 #define CHARS_PER_TEXTUREROOT 32
 
 class FreeTypeFont
 {
 public:
-	bool LoadFont(std::string sFile, int iPXSize, int iMaxCharSupport = 128);
-	bool LoadSystemFont(std::string sName, int iPXSize, int iMaxCharSupport = 128);
+	bool LoadFont(std::string file, int pxSize, int maxCharSupport = 128);
+	bool LoadSystemFont(std::string name, int pxSize, int maxCharSupport = 128);
 
-	int GetTextWidth(std::string sText, int iPXSize);
+	int GetTextWidth(std::string text, int pxSize);
 
-	void Print(std::string sText, int x, int y, int iPXSize = -1);
+	void Print(std::string text, int x, int y, int pxSize = -1);
 	//void Print(wstring sText, int x, int y, int iPXSize = -1);
-	void PrintFormatted(int x, int y, int iPXSize, char* sText, ...);
-	void PrintFormatted(int x, int y, int iPXSize, wchar_t* sText, ...);
+	void PrintFormatted(int x, int y, int pxSize, char* text, ...);
+	//void PrintFormatted(int x, int y, int pxSize, wchar_t* text, ...);
 
 	void DeleteFont();
 
-	void SetShaderProgram(Shader* a_shShaderProgram);
+	void SetShaderProgram(Shader* shader);
 
 	FreeTypeFont();
 private:
-	void CreateChar(int iIndex, GLubyte* bData);
+	void CreateChar(int index, GLubyte* data);
 
-	std::vector<Texture> tCharTextures;
-	std::vector<int> iAdvX, iAdvY;
-	std::vector<int> iBearingX, iBearingY;
-	std::vector<int> iCharWidth, iCharHeight;
-	int iLoadedPixelSize, iNewLine;
-	int iOneCharSquareSize;
+	std::vector<Texture> charTextures;
+	std::vector<int> advX, advY;
+	std::vector<int> bearingX, bearingY;
+	std::vector<int> charWidth, charHeight;
+	int loadedPixelSize, newLine;
+	int oneCharSquareSize;
 
-	bool bLoaded;
+	bool is_loaded;
 
 	unsigned int vao;
 	VertexBufferObject vbo;
 
-	FT_Library ftLib;
-	FT_Face ftFace;
-	Shader* shShaderProgram;
+	FT_Library lib;
+	FT_Face face;
+	Shader* shader;
 };

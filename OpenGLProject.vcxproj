@@ -124,6 +124,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="FrameBuffer.cpp" />
+    <ClCompile Include="FrameBufferTexture.cpp" />
     <ClCompile Include="FreeTypeFont.cpp" />
     <ClCompile Include="Geometry.cpp" />
     <ClCompile Include="GUI.cpp" />
@@ -137,18 +139,23 @@
     <ClCompile Include="InputController.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="FPSController.cpp" />
+    <ClCompile Include="MultiLayeredHeightmap.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="Shadow.cpp" />
     <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="SkyCamera.cpp" />
     <ClCompile Include="SpotLight.cpp" />
     <ClCompile Include="Sun.cpp" />
+    <ClCompile Include="Television.cpp" />
     <ClCompile Include="VertexBufferObject.cpp" />
-    <ClCompile Include="ObjectTests.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Wolf.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="FrameBuffer.h" />
+    <ClInclude Include="FrameBufferTexture.h" />
     <ClInclude Include="FreeTypeFont.h" />
     <ClInclude Include="Geometry.h" />
     <ClInclude Include="GUI.h" />
@@ -160,13 +167,16 @@
     <ClInclude Include="FPSController.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="House.h" />
+    <ClInclude Include="MultiLayeredHeightmap.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="Shadow.h" />
     <ClInclude Include="Skybox.h" />
     <ClInclude Include="SkyCamera.h" />
     <ClInclude Include="SpotLight.h" />
     <ClInclude Include="Sun.h" />
+    <ClInclude Include="Television.h" />
     <ClInclude Include="VertexBufferObject.h" />
-    <ClInclude Include="ObjectTests.h" />
     <ClInclude Include="InputController.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Texture.h" />
