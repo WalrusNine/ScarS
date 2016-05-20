@@ -12,21 +12,30 @@
 //Include GLFW  
 #include <GLFW/glfw3.h>
 
+//std::vector<Shader*> Shader::shaders;
 Shader* Shader::shader;
+std::vector<std::pair<int, std::string>> Shader::programs;
 
-Shader::Shader(std::string vertex, std::string fragment) {
+Shader::Shader() {
 	handle = -1;
+	std::string dir = "data\\shaders\\";
 
-	this->shadersFilenames[0] = new std::string(vertex);
-	this->shadersFilenames[1] = new std::string(fragment);
-	this->shadersFilenames[2] = new std::string("shadowMapper.frag");
-	this->shadersFilenames[3] = new std::string("shadowMapper.vert");
+	this->shadersFilenames[0] = new std::string(dir + "shader.vert");
+	this->shadersFilenames[1] = new std::string(dir + "shader.frag");
+	this->shadersFilenames[2] = new std::string("shadow_shader.frag");
+	this->shadersFilenames[3] = new std::string("shadow_shader.vert");
+	/*this->shadersFilenames[4] = new std::string(dir + "font_shader.frag");
+	this->shadersFilenames[5] = new std::string(dir + "font_shader.vert");*/
 
 	this->shaderTypes[0] = GL_VERTEX_SHADER;
 	this->shaderTypes[1] = GL_FRAGMENT_SHADER;
 	this->shaderTypes[2] = GL_FRAGMENT_SHADER;
 	this->shaderTypes[3] = GL_VERTEX_SHADER;
+	/*this->shaderTypes[4] = GL_FRAGMENT_SHADER;
+	this->shaderTypes[5] = GL_VERTEX_SHADER;/**/
 
+	//shaders.reserve(2);
+	//shaders.push_back(this);
 	shader = this;
 }
 
@@ -43,10 +52,13 @@ void Shader::init() {
 
 	for (int i = 0; i < NUMBER_OF_SHADER_TYPES; ++i) {
 		shadersHandles[i] = ((*sources)[i].length() > 0) ? compileSource((*sources)[i], shaderTypes[i]) : -1;
-		// printf("Shader[%d]: %d\n", i, shadersHandles[i]);
 	}
+	// Link 0-3 = main shader
+	handle = linkShaders(std::vector<int>{ shadersHandles[0], shadersHandles[1], shadersHandles[2], shadersHandles[3] });
+	programs.push_back(std::pair<int, std::string>(handle, "main_shader"));
 
-	handle = linkShaders(shadersHandles);
+	/*int temp_handle = linkShaders(std::vector<int>{ shadersHandles[4], shadersHandles[5] });
+	programs.push_back(std::pair<int, std::string>(temp_handle, "font_shader"));*/
 
 	for (int i = 0; i < NUMBER_OF_SHADER_TYPES; ++i) {
 		if (shadersHandles[i] >= 0) {
@@ -58,7 +70,7 @@ void Shader::init() {
 }
 
 std::vector<std::string>* Shader::readSources() {
-	std::vector<std::string>* sources = new std::vector<std::string>(5);
+	std::vector<std::string>* sources = new std::vector<std::string>(NUMBER_OF_SHADER_TYPES);
 
 	for (int i = 0; i < NUMBER_OF_SHADER_TYPES; ++i) {
 		if (shadersFilenames[i] != NULL) {
@@ -105,6 +117,7 @@ int Shader::compileSource(std::string source, int type) {
 		glGetShaderInfoLog(handle_aux, logSize, &logSize, &errorLog[0]);
 		for (std::vector<char>::const_iterator i = errorLog.begin(); i != errorLog.end(); ++i)
 			std::cout << *i;
+		return -1;
 	}
 	/*ERROR treatment
 	else {
@@ -127,10 +140,10 @@ int Shader::compileSource(std::string source, int type) {
 	*/
 }
 
-int Shader::linkShaders(int shadersHandles[]) {
+int Shader::linkShaders(std::vector<int> shadersHandles) {
 	int programHandle = glCreateProgram();
 
-	for (int i = 0; i < NUMBER_OF_SHADER_TYPES; i++) {
+	for (int i = 0; i < 4; i++) {
 		if (shadersHandles[i] >= 0) {
 			glAttachShader(programHandle, shadersHandles[i]);
 		}
@@ -145,7 +158,10 @@ int Shader::linkShaders(int shadersHandles[]) {
 	if (success == GL_TRUE) {
 		return programHandle;
 	}
-	else printf("Couldn't link shaders.\n");
+	else {
+		printf("Couldn't link shaders.\n");
+		return -1;
+	}
 	/* ERROR handling
 	else {
 

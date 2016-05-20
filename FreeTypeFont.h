@@ -20,9 +20,9 @@ public:
 	int GetTextWidth(std::string text, int pxSize);
 
 	void Print(std::string text, int x, int y, int pxSize = -1);
-	//void Print(wstring sText, int x, int y, int iPXSize = -1);
+	void Print(std::wstring text, int x, int y, int pxSize = -1);
 	void PrintFormatted(int x, int y, int pxSize, char* text, ...);
-	//void PrintFormatted(int x, int y, int pxSize, wchar_t* text, ...);
+	void PrintFormatted(int x, int y, int pxSize, wchar_t* text, ...);
 
 	void DeleteFont();
 

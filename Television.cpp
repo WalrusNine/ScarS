@@ -16,7 +16,7 @@ void Television::create() {
 	position.z = 0;
 	position.y = -5.f;
 	rotation.x = 90;
-	scale.x *= 5;
+	scale.x *= 10;
 	scale.z *= 5;
 
 	frameBuffer.CreateFramebufferWithTexture(1024, 720);

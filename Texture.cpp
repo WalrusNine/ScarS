@@ -20,7 +20,7 @@ Texture::Texture(std::string name) {
 	this->name = name;
 }
 
-void Texture::createEmptyTexture(int width, int height, int bpp, GLenum format) {
+void Texture::CreateEmptyTexture(int width, int height, int bpp, GLenum format) {
 	glGenTextures(1, &textureHandle);
 	glBindTexture(GL_TEXTURE_2D, textureHandle);
 	if (format == GL_RGBA || format == GL_BGRA)
@@ -39,7 +39,7 @@ void Texture::createEmptyTexture(int width, int height, int bpp, GLenum format) 
 	this->mipMapsGenerated = true;
 }
 
-void Texture::createFromData(GLubyte* data, int inWidth, int inHeight, int inBpp, GLenum format, bool generateMipMaps, bool pixelStore) {
+void Texture::CreateFromData(GLubyte* data, int inWidth, int inHeight, int inBpp, GLenum format, bool generateMipMaps, bool pixelStore) {
 	// Generate an OpenGL texture ID for this texture
 	glGenTextures(1, &textureHandle);
 	glBindTexture(GL_TEXTURE_2D, textureHandle);
@@ -121,24 +121,24 @@ void Texture::UnloadTexture() {
 	glDeleteTextures(1, &textureHandle);
 }
 
-GLuint Texture::getTextureHandle(){
+GLuint Texture::GetTextureHandle(){
 	return textureHandle;
 }
 
 Texture::~Texture() {
 }
 
-void Texture::bind(int textureUnit) {
+void Texture::Bind(int textureUnit) {
 	glActiveTexture(GL_TEXTURE0 + textureUnit);
 	glBindTexture(GL_TEXTURE_2D, textureHandle);
 	glBindSampler(textureUnit, samplerHandle);
 }
 
-std::string Texture::getPath() {
+std::string Texture::GetPath() {
 	return filepath;
 }
 
-void Texture::setFiltering(int in_magnification, int in_minification) {
+void Texture::SetFiltering(int in_magnification, int in_minification) {
 	// Set magnification filter
 	if (in_magnification == TEXTURE_FILTER_MAG_NEAREST)
 		glSamplerParameteri(samplerHandle, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -165,23 +165,23 @@ void Texture::setFiltering(int in_magnification, int in_minification) {
 	magnification = in_magnification;
 }
 
-void Texture::setSamplerParameter(GLenum parameter, GLenum value) {
+void Texture::SetSamplerParameter(GLenum parameter, GLenum value) {
 	glSamplerParameteri(samplerHandle, parameter, value);
 }
 
-int Texture::getMinificationFilter() {
+int Texture::GetMinificationFilter() {
 	return minification;
 }
 
-int Texture::getMagnificationFilter() {
+int Texture::GetMagnificationFilter() {
 	return magnification;
 }
 
-void Texture::addTexture(Texture* t) {
+void Texture::AddTexture(Texture* t) {
 	textures.push_back(t);
 }
 
-Texture* Texture::createTexture(std::string filepath, int mag, int min, std::string name, bool generateMipMaps) {
+Texture* Texture::CreateTexture(std::string filepath, int mag, int min, std::string name, bool generateMipMaps) {
 	Texture* t = new Texture(name);
 
 	bool success = t->LoadTexture2D(filepath, generateMipMaps);
@@ -189,19 +189,19 @@ Texture* Texture::createTexture(std::string filepath, int mag, int min, std::str
 		std::cout << "Error: couldn't load texture " << filepath << std::endl;
 	}
 
-	t->setFiltering(mag, min);
+	t->SetFiltering(mag, min);
 
 	return t;
 }
 
-std::string Texture::getName() {
+std::string Texture::GetName() {
 	return name;
 }
 
-Texture* Texture::getTexture(std::string name) {
+Texture* Texture::GetTexture(std::string name) {
 	int len = Texture::textures.size();
 	for (int i = 0; i < len; ++i) {
-		if (Texture::textures[i]->getName() == name) {
+		if (Texture::textures[i]->GetName() == name) {
 			return Texture::textures[i];
 		}
 	}

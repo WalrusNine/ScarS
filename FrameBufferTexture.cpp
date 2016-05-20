@@ -2,7 +2,7 @@
 
 #include "FrameBufferTexture.h"
 
-void FrameBufferTexture::bind(int textureUnit) {
-	Texture::bind(textureUnit);
+void FrameBufferTexture::Bind(int textureUnit) {
+	Texture::Bind(textureUnit);
 	glGenerateMipmap(GL_TEXTURE_2D);
 }

@@ -10,7 +10,7 @@
 class Shader {
 
 public:
-	Shader(std::string vertex, std::string fragment);
+	Shader();
 	~Shader();
 
 	void init();
@@ -37,6 +37,7 @@ public:
 	void SetAttribute(std::string name, glm::vec2 vec);
 
 	static Shader* shader;
+	//static Shader* GetShader(std::string name);
 
 private:
 	std::string* shadersFilenames[NUMBER_OF_SHADER_TYPES];
@@ -48,7 +49,11 @@ private:
 	std::vector<std::string>* readSources();
 	std::string readSource(std::ifstream& source);
 	int compileSource(std::string source, int type);
-	int linkShaders(int shadersHandles[]);
+	int linkShaders(std::vector<int> shadersHandles);
 	
 	void release();
+
+	static std::vector<std::pair<int, std::string>> programs;
+
+	//static std::vector<Shader*> shaders;
 };

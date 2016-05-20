@@ -53,9 +53,9 @@ void Scene::init() {
 	}
 
 	// Create Textures
-	Texture::addTexture(Texture::createTexture("data\\textures\\golddiag.jpg", TEXTURE_FILTER_MAG_BILINEAR, TEXTURE_FILTER_MIN_BILINEAR_MIPMAP, "golddiag", true));
-	Texture::addTexture(Texture::createTexture("data\\textures\\snow.jpg", TEXTURE_FILTER_MAG_BILINEAR, TEXTURE_FILTER_MIN_BILINEAR_MIPMAP, "snow", true));
-	Texture::addTexture(Texture::createTexture("data\\textures\\box.jpg", TEXTURE_FILTER_MAG_BILINEAR, TEXTURE_FILTER_MIN_BILINEAR_MIPMAP, "box", true));
+	Texture::AddTexture(Texture::CreateTexture("data\\textures\\golddiag.jpg", TEXTURE_FILTER_MAG_BILINEAR, TEXTURE_FILTER_MIN_BILINEAR_MIPMAP, "golddiag", true));
+	Texture::AddTexture(Texture::CreateTexture("data\\textures\\snow.jpg", TEXTURE_FILTER_MAG_BILINEAR, TEXTURE_FILTER_MIN_BILINEAR_MIPMAP, "snow", true));
+	Texture::AddTexture(Texture::CreateTexture("data\\textures\\box.jpg", TEXTURE_FILTER_MAG_BILINEAR, TEXTURE_FILTER_MIN_BILINEAR_MIPMAP, "box", true));
 
 	// Create Models
 	Model::addModel(Model::createModel("data\\models\\FireGTO\\FireGTO.blend", "car"));
@@ -64,8 +64,8 @@ void Scene::init() {
 	Model::addModel(Model::createModel("data\\models\\tree\\Tree1.3ds", "tree"));
 	Model::addModel(Model::createModel("data\\models\\building\\Small_Building_1.blend", "building"));
 	Model::addModel(Model::createModel("data\\models\\Roads\\Roads.blend", "roads"));
-	Model::addModel(Model::createGeometry(GEOMETRY_PLANE, Texture::getTexture("snow"), vec4(1.0f), "ground"));
-	Model::addModel(Model::createGeometry(GEOMETRY_CUBE, Texture::getTexture("box"), vec4(1.0f), "woodenbox"));
+	Model::addModel(Model::createGeometry(GEOMETRY_PLANE, Texture::GetTexture("snow"), vec4(1.0f), "ground"));
+	Model::addModel(Model::createGeometry(GEOMETRY_CUBE, Texture::GetTexture("box"), vec4(1.0f), "woodenbox"));
 	Model::addModel(Model::createGeometry(GEOMETRY_CUBE, nullptr, vec4(0.0f, 0.0f, 1.0f, 0.5f), "colorbox"));
 	Model::addModel(Model::createGeometry(GEOMETRY_PLANE, nullptr, vec4(1.0f, 1.0f, 1.0f, 1.0f), "panel"));
 	//Model::addModel(Model::createSkybox("data\\skyboxes\\ame_siege\\", { "siege_ft.tga", "siege_bk.tga", "siege_lf.tga", "siege_rt.tga", "siege_up.tga", "siege_dn.tga" }, "siege"));
@@ -129,7 +129,7 @@ void Scene::init() {
 	// Colored box
 	GameObject* colorBox = new GameObject("blendbox");
 	colorBox->model = Model::getModel("colorbox");
-	colorBox->model->setTexture(Texture::getTexture("box"));
+	colorBox->model->setTexture(Texture::GetTexture("box"));
 	colorBox->position.x = -20.0f;
 	colorBox->position.y = -4.0f;
 	colorBox->position.z = 20.0f;

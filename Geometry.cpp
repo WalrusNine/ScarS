@@ -78,6 +78,7 @@ std::vector<glm::vec3> Geometry::getGeometryVertexPosition(std::string name) {
 		return planeVerticesPosition;
 	else if (name == "cube")
 		return cubeVerticesPosition;
+	else return planeVerticesPosition;
 }
 
 std::vector<glm::vec2> Geometry::getGeometryVertexUV(std::string name) {
@@ -85,4 +86,5 @@ std::vector<glm::vec2> Geometry::getGeometryVertexUV(std::string name) {
 		return planeVerticesUV;
 	else if (name == "cube")
 		return cubeVerticesUV;
+	else return planeVerticesUV;
 }

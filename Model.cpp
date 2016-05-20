@@ -50,7 +50,7 @@ Model::Model(std::string name) {
 }
 
 void Model::ClearModels() {
-	vbo.deleteVBO();
+	vbo.DeleteVBO();
 	glDeleteVertexArrays(1, &vao);
 
 	for (int i = 0; i < (int)Texture::textures.size(); ++i) {
@@ -60,8 +60,8 @@ void Model::ClearModels() {
 
 bool Model::LoadModelFromFile(char* filepath) {
 	// Create static variables if didn't yet
-	if (vbo.getBufferID() == 0) {
-		vbo.createVBO({ sizeof(glm::vec3), sizeof(glm::vec2), sizeof(glm::vec3), sizeof(glm::vec4) });
+	if (vbo.GetBufferID() == 0) {
+		vbo.CreateVBO({ sizeof(glm::vec3), sizeof(glm::vec2), sizeof(glm::vec3), sizeof(glm::vec4) });
 	}
 
 	Assimp::Importer importer;
@@ -85,8 +85,8 @@ bool Model::LoadModelFromFile(char* filepath) {
 		// Add mesh`s material to list
 		materialIndices.push_back(mesh->mMaterialIndex);
 		// Add mesh`s index to list, to know where this mesh starts in the VBO
-		int sizeBefore = vbo.getCurrentSize();
-		meshStartIndices.push_back(sizeBefore / vbo.getVertexTotalSize());
+		int sizeBefore = vbo.GetCurrentSize();
+		meshStartIndices.push_back(sizeBefore / vbo.GetVertexTotalSize());
 		for (int j = 0; j < meshFaces; ++j)	{
 			// For each mesh face
 			const aiFace& face = mesh->mFaces[j];
@@ -98,12 +98,12 @@ bool Model::LoadModelFromFile(char* filepath) {
 				aiVector3D normal = mesh->HasNormals() ? mesh->mNormals[face.mIndices[k]] : aiVector3D(1.0f, 1.0f, 1.0f);
 				aiColor4D diffuse; aiGetMaterialColor(scene->mMaterials[mesh->mMaterialIndex], AI_MATKEY_COLOR_DIFFUSE, &diffuse);
 				//aiColor4D specular; aiGetMaterialColor(scene->mMaterials[mesh->mMaterialIndex], AI_MATKEY_COLOR_SPECULAR, &specular);
-				vbo.addVertex(&getGlmVector(pos), &getGlmVector(uv), &getGlmVector(normal), &getGlmVector(diffuse));
+				vbo.AddVertex(&getGlmVector(pos), &getGlmVector(uv), &getGlmVector(normal), &getGlmVector(diffuse));
 			}
 		}
 		int meshVertices = mesh->mNumVertices;
 		totalVertices += meshVertices;
-		meshSizes.push_back((vbo.getCurrentSize() - sizeBefore) / vbo.getVertexTotalSize());
+		meshSizes.push_back((vbo.GetCurrentSize() - sizeBefore) / vbo.GetVertexTotalSize());
 	}
 	numMaterials = scene->mNumMaterials;
 
@@ -123,7 +123,7 @@ bool Model::LoadModelFromFile(char* filepath) {
 			int iTexFound = -1;
 			int nTex = (int)Texture::textures.size();
 			for (int j = 0; j < nTex; ++j) {
-				if (sFullPath == Texture::textures[j]->getPath()) {
+				if (sFullPath == Texture::textures[j]->GetPath()) {
 					iTexFound = j;
 					break;
 				}
@@ -137,7 +137,7 @@ bool Model::LoadModelFromFile(char* filepath) {
 					printf("Couldn't load texture: %s\n", sFullPath.c_str());
 				}
 				materialRemap[i] = nTex;
-				Texture::addTexture(tNew);
+				Texture::AddTexture(tNew);
 			}
 		}
 	}
@@ -152,15 +152,15 @@ bool Model::LoadModelFromFile(char* filepath) {
 }
 
 void Model::FinalizeVBO() {
-	int totalSize = vbo.getVertexTotalSize();
-	std::vector<int> sizes = vbo.getVertexSizes();
+	int totalSize = vbo.GetVertexTotalSize();
+	std::vector<int> sizes = vbo.GetVertexSizes();
 
 	// Bind VAO
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 	// Bind VBO
-	vbo.bindVBO();
-	vbo.uploadDataToGPU(GL_STATIC_DRAW);
+	vbo.BindVBO();
+	vbo.UploadDataToGPU(GL_STATIC_DRAW);
 	// Vertex positions
 	int loc = Shader::shader->getAttribLocation("a_position");
 	glEnableVertexAttribArray(loc);
@@ -195,8 +195,8 @@ Model* Model::createModel(char * filepath, std::string name) {
 }
 
 Model* Model::createGeometry(GeometryType g, Texture * t, glm::vec4 color, std::string name) {
-	if (vbo.getBufferID() == 0) {
-		vbo.createVBO({ sizeof(glm::vec3), sizeof(glm::vec2), sizeof(glm::vec3), sizeof(glm::vec4) });
+	if (vbo.GetBufferID() == 0) {
+		vbo.CreateVBO({ sizeof(glm::vec3), sizeof(glm::vec2), sizeof(glm::vec3), sizeof(glm::vec4) });
 	}
 
 	std::vector<glm::vec3> pos;
@@ -207,12 +207,12 @@ Model* Model::createGeometry(GeometryType g, Texture * t, glm::vec4 color, std::
 
 	int n = 0;
 
-	int sizeBefore = vbo.getCurrentSize();
+	int sizeBefore = vbo.GetCurrentSize();
 
 	// Create model
 	Model* model = new Model();
 	model->materialIndices.push_back(0);
-	model->meshStartIndices.push_back(sizeBefore / vbo.getVertexTotalSize());
+	model->meshStartIndices.push_back(sizeBefore / vbo.GetVertexTotalSize());
 
 	// Setup vertices
 	if (g == GEOMETRY_PLANE) {
@@ -227,18 +227,18 @@ Model* Model::createGeometry(GeometryType g, Texture * t, glm::vec4 color, std::
 	}
 
 	for (int i = 0; i < n; ++i) {
-		vbo.addVertex(&pos[i], &uv[i], &normal, &diffuse);
+		vbo.AddVertex(&pos[i], &uv[i], &normal, &diffuse);
 	}
 
 
-	model->meshSizes.push_back((vbo.getCurrentSize() - sizeBefore) / vbo.getVertexTotalSize());
+	model->meshSizes.push_back((vbo.GetCurrentSize() - sizeBefore) / vbo.GetVertexTotalSize());
 
 	if (t != nullptr) {
 		// Texture
 		int texLocation = -1;
 		int nTex = (int)Texture::textures.size();
 		for (int i = 0; i < nTex; ++i) {
-			if (t->getTextureHandle() == Texture::textures[i]->getTextureHandle()) {
+			if (t->GetTextureHandle() == Texture::textures[i]->GetTextureHandle()) {
 				texLocation = i;
 				break;
 			}
@@ -265,7 +265,7 @@ void Model::setTexture(Texture* t, GLenum drawmode) {
 	int texLocation = -1;
 	int nTex = (int)Texture::textures.size();
 	for (int i = 0; i < nTex; ++i) {
-		if (t->getTextureHandle() == Texture::textures[i]->getTextureHandle()) {
+		if (t->GetTextureHandle() == Texture::textures[i]->GetTextureHandle()) {
 			texLocation = i;
 			break;
 		}
@@ -282,8 +282,8 @@ void Model::setTexture(Texture* t, GLenum drawmode) {
 }
 
 Model* Model::createSkybox(std::string dir, std::vector<std::string> filenames, std::string name) {
-	if (vbo.getBufferID() == 0) {
-		vbo.createVBO({ sizeof(glm::vec3), sizeof(glm::vec2), sizeof(glm::vec3), sizeof(glm::vec4) });
+	if (vbo.GetBufferID() == 0) {
+		vbo.CreateVBO({ sizeof(glm::vec3), sizeof(glm::vec2), sizeof(glm::vec3), sizeof(glm::vec4) });
 	}
 
 	int totalVertices = 0;
@@ -301,9 +301,9 @@ Model* Model::createSkybox(std::string dir, std::vector<std::string> filenames, 
 
 	// Set textures parameters
 	for (int i = 0; i < 6; ++i) {
-		sbtextures[i]->setFiltering(TEXTURE_FILTER_MAG_BILINEAR, TEXTURE_FILTER_MIN_BILINEAR);
-		sbtextures[i]->setSamplerParameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		sbtextures[i]->setSamplerParameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		sbtextures[i]->SetFiltering(TEXTURE_FILTER_MAG_BILINEAR, TEXTURE_FILTER_MIN_BILINEAR);
+		sbtextures[i]->SetSamplerParameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		sbtextures[i]->SetSamplerParameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	}
 
 	// Setup vertices
@@ -342,8 +342,8 @@ Model* Model::createSkybox(std::string dir, std::vector<std::string> filenames, 
 	// Meshes
 	for (int i = 0; i < 6; ++i) {
 		model->materialIndices.push_back(i);
-		int sizeBefore = vbo.getCurrentSize();
-		model->meshStartIndices.push_back(sizeBefore / vbo.getVertexTotalSize());
+		int sizeBefore = vbo.GetCurrentSize();
+		model->meshStartIndices.push_back(sizeBefore / vbo.GetVertexTotalSize());
 		// MeshFaces
 		for (int j = 0; j < 4; ++j) {
 			//Vertices
@@ -352,11 +352,11 @@ Model* Model::createSkybox(std::string dir, std::vector<std::string> filenames, 
 			glm::vec3 normal = vSkyBoxNormals[i];
 			glm::vec4 diffuse(1, 1, 1, 1);
 			aiColor4D specular(1, 1, 1, 1);
-			vbo.addVertex(&pos, &uv, &normal, &diffuse);
+			vbo.AddVertex(&pos, &uv, &normal, &diffuse);
 		}
 		int meshVertices = 4;
 		totalVertices += meshVertices;
-		model->meshSizes.push_back((vbo.getCurrentSize() - sizeBefore) / vbo.getVertexTotalSize());
+		model->meshSizes.push_back((vbo.GetCurrentSize() - sizeBefore) / vbo.GetVertexTotalSize());
 
 	}
 
@@ -368,7 +368,7 @@ Model* Model::createSkybox(std::string dir, std::vector<std::string> filenames, 
 
 		int nTex = (int)Texture::textures.size();
 		for (int j = 0; j < nTex; ++j) {
-			if (sbtextures[i]->getTextureHandle() == Texture::textures[j]->getTextureHandle()) {
+			if (sbtextures[i]->GetTextureHandle() == Texture::textures[j]->GetTextureHandle()) {
 				texLocation = j;
 				break;
 			}
@@ -405,7 +405,7 @@ void Model::render() {
 	int numMeshes = (int)meshSizes.size();
 	for (int i = 0; i < numMeshes; ++i) {
 		int matIndex = materialIndices[i];
-		Texture::textures[matIndex]->bind(0);
+		Texture::textures[matIndex]->Bind(0);
 		glDrawArrays(drawMode, meshStartIndices[i], meshSizes[i]);
 	}
 }

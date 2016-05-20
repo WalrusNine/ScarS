@@ -75,7 +75,7 @@ bool initialize(int argc, char* argv[]) {
 	}
 	
 	// Load shaders
-	Shader::shader = new Shader("data\\shaders\\shader.vert", "data\\shaders\\shader.frag");
+	Shader::shader = new Shader();
 	Shader::shader->init();
 	Shader::shader->bind();
 

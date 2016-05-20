@@ -183,9 +183,12 @@
     <ClInclude Include="Wolf.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="data\shaders\font_shader.frag" />
+    <None Include="data\shaders\font_shader.vert" />
     <None Include="data\shaders\shader.frag" />
     <None Include="data\shaders\shader.vert" />
-    <None Include="data\shaders\spotlight.frag" />
+    <None Include="data\shaders\shadow_shader.frag" />
+    <None Include="data\shaders\shadow_shader.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

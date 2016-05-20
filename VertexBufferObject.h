@@ -9,28 +9,28 @@
 class VertexBufferObject {
 
 public:
-	void createVBO(std::vector<int> sizes);
-	void deleteVBO();
+	void CreateVBO(std::vector<int> sizes);
+	void DeleteVBO();
 
-	void* mapBufferToMemory(int usageHint);
-	void* mapSubBufferToMemory(int usageHint, GLuint offset, GLuint length);
-	void unmapBuffer();
+	void* MapBufferToMemory(int usageHint);
+	void* MapSubBufferToMemory(int usageHint, GLuint offset, GLuint length);
+	void UnmapBuffer();
 
-	void bindVBO(int bufferType = GL_ARRAY_BUFFER);
-	void uploadDataToGPU(int usageHint = GL_STATIC_DRAW);
+	void BindVBO(int bufferType = GL_ARRAY_BUFFER);
+	void UploadDataToGPU(int usageHint = GL_STATIC_DRAW);
 
-	void addData(void* data, GLuint dataSize);
-	void addVertex(void* pos, void* uv, void* normal, void* diffuse);
+	void AddData(void* data, GLuint dataSize);
+	void AddVertex(void* pos, void* uv, void* normal, void* diffuse);
 
-	void* getDataPointer();
-	GLuint getBufferID();
+	void* GetDataPointer();
+	GLuint GetBufferID();
 
-	int getCurrentSize();
+	int GetCurrentSize();
 
 	VertexBufferObject();
 
-	int getVertexTotalSize();
-	std::vector<int> getVertexSizes();
+	int GetVertexTotalSize();
+	std::vector<int> GetVertexSizes();
 
 private:
 	GLuint buffer;

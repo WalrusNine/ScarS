@@ -21,17 +21,17 @@ glm::vec2 vShadowMapQuadTC[] =
 
 Shadow::Shadow() {
 	textureSize = 1024;
-	vbo.createVBO({});
+	vbo.CreateVBO({});
 	for (int i = 0; i < 4; ++i) {
-		vbo.addData(&vShadowMapQuad[i], sizeof(glm::vec3));
-		vbo.addData(&vShadowMapQuadTC[i], sizeof(glm::vec2));
+		vbo.AddData(&vShadowMapQuad[i], sizeof(glm::vec3));
+		vbo.AddData(&vShadowMapQuadTC[i], sizeof(glm::vec2));
 	}
 
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 
-	vbo.bindVBO();
-	vbo.uploadDataToGPU(GL_STATIC_DRAW);
+	vbo.BindVBO();
+	vbo.UploadDataToGPU(GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3) + sizeof(glm::vec2), 0);
@@ -79,7 +79,7 @@ void Shadow::update() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glViewport(0, 0, 1280, 720);
 
-	int texUnit = shadowMap.GetFrameBufferTexture()->getTextureHandle();
+	int texUnit = shadowMap.GetFrameBufferTexture()->GetTextureHandle();
 	Shader::shader->SetUniform("depthBiasMVP", mDepthBiasMVP);
 	shadowMap.BindFramebufferTexture(texUnit, false);
 	Shader::shader->SetUniform("shadowMap", texUnit);

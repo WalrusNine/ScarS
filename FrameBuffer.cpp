@@ -30,9 +30,9 @@ bool FrameBuffer::CreateFramebufferWithTexture(int w, int h) {
 	glGenFramebuffers(1, &framebuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 	framebufferTex = new FrameBufferTexture();
-	framebufferTex->createEmptyTexture(w, h, 24, GL_RGB);
+	framebufferTex->CreateEmptyTexture(w, h, 24, GL_RGB);
 
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, framebufferTex->getTextureHandle(), 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, framebufferTex->GetTextureHandle(), 0);
 
 	width = w;
 	height = h;
@@ -94,7 +94,7 @@ are stored.
 /*---------------------------------------------*/
 
 void FrameBuffer::BindFramebufferTexture(int iTextureUnit, bool bRegenMipMaps) {
-	framebufferTex->bind(iTextureUnit);
+	framebufferTex->Bind(iTextureUnit);
 	if (bRegenMipMaps) glGenerateMipmap(GL_TEXTURE_2D);
 }
 
@@ -112,7 +112,7 @@ performance.
 /*---------------------------------------------*/
 
 void FrameBuffer::SetFramebufferTextureFiltering(int a_tfMagnification, int a_tfMinification) {
-	framebufferTex->setFiltering(a_tfMagnification, a_tfMinification);
+	framebufferTex->SetFiltering(a_tfMagnification, a_tfMinification);
 }
 
 /*-----------------------------------------------

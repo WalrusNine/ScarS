@@ -24,26 +24,26 @@ public:
 	Texture(std::string name = "");
 	~Texture();
 
-	void createFromData(GLubyte* data, int width, int height, int bpp, GLenum format, bool generateMipMaps, bool pixelStore);
-	void createEmptyTexture(int width, int height, int bpp, GLenum format);
+	void CreateFromData(GLubyte* data, int width, int height, int bpp, GLenum format, bool generateMipMaps, bool pixelStore = false);
+	void CreateEmptyTexture(int width, int height, int bpp, GLenum format);
 	bool LoadTexture2D(std::string filepath, bool generateMipMaps = false);
 	void UnloadTexture();
 
-	int getMinificationFilter();
-	int getMagnificationFilter();
+	int GetMinificationFilter();
+	int GetMagnificationFilter();
 
-	void setFiltering(int in_magnification, int in_minification);
-	void setSamplerParameter(GLenum parameter, GLenum value);
+	void SetFiltering(int in_magnification, int in_minification);
+	void SetSamplerParameter(GLenum parameter, GLenum value);
 
-	GLuint getTextureHandle();
-	virtual void bind(int = 0);
+	GLuint GetTextureHandle();
+	virtual void Bind(int = 0);
 
-	std::string getPath();
-	std::string getName();
+	std::string GetPath();
+	std::string GetName();
 
-	static void addTexture(Texture* t);
-	static Texture* createTexture(std::string filepath, int magnification, int minification, std::string name, bool generateMipMaps = false);
-	static Texture* getTexture(std::string name);
+	static void AddTexture(Texture* t);
+	static Texture* CreateTexture(std::string filepath, int magnification, int minification, std::string name, bool generateMipMaps = false);
+	static Texture* GetTexture(std::string name);
 
 	static std::vector<Texture*> textures;
 

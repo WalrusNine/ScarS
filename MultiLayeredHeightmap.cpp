@@ -134,12 +134,12 @@ bool MultiLayeredHeightmap::LoadHeightMapFromImage(std::string path) {
 	}
 	*/
 	// First, create a VBO with only vertex data
-	vboHeightmapData.createVBO({ sizeof(glm::vec3), sizeof(glm::vec2), sizeof(glm::vec3) }); // Preallocate memory
+	vboHeightmapData.CreateVBO({ sizeof(glm::vec3), sizeof(glm::vec2), sizeof(glm::vec3) }); // Preallocate memory
 	
 	for (int i = 0; i < rows; ++i) {
 		for (int j = 0; j < columns; ++j) {
-			vboHeightmapData.addData(&vertexData[i][j], sizeof(glm::vec3)); // Add vertex
-			vboHeightmapData.addData(&coordsData[i][j], sizeof(glm::vec2)); // Add tex. coord
+			vboHeightmapData.AddData(&vertexData[i][j], sizeof(glm::vec3)); // Add vertex
+			vboHeightmapData.AddData(&coordsData[i][j], sizeof(glm::vec2)); // Add tex. coord
 			//vboHeightmapData.addData(&finalNormals[i][j], sizeof(glm::vec3)); // Add normal
 		}
 	}
@@ -166,8 +166,8 @@ bool MultiLayeredHeightmap::LoadHeightMapFromImage(std::string path) {
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 	// Attach vertex data to this VAO
-	vboHeightmapData.bindVBO();
-	vboHeightmapData.uploadDataToGPU(GL_STATIC_DRAW);
+	vboHeightmapData.BindVBO();
+	vboHeightmapData.UploadDataToGPU(GL_STATIC_DRAW);
 
 	// Vertex positions
 	glEnableVertexAttribArray(0);
@@ -243,8 +243,8 @@ void MultiLayeredHeightmap::ReleaseHeightmap() {
 	if (!isLoaded)
 		return; // Heightmap must be loaded
 
-	vboHeightmapData.deleteVBO();
-	vboHeightmapIndices.deleteVBO();
+	vboHeightmapData.DeleteVBO();
+	vboHeightmapIndices.DeleteVBO();
 	glDeleteVertexArrays(1, &vao);
 	isLoaded = false;
 }
