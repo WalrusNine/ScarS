@@ -3,7 +3,7 @@
 SkyCamera::SkyCamera() : Camera::Camera() {
 	// There's no zoom, only movement
 	// There's no attached object
-	movementSpeed = 6.0f;
+	movementSpeed = 18.0f;
 
 
 

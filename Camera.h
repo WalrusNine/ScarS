@@ -26,6 +26,8 @@ public:
 
 	void attachGameObject(GameObject* go, vec3 relativePosition);
 
+	void invertPitch();
+
 protected:
 	// Matrices for MVP
 	mat4 viewMatrix;

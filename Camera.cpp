@@ -105,6 +105,11 @@ void Camera::attachGameObject(GameObject* go, vec3 relativePosition) {
 	maxZoom = 5.0f;
 }
 
+void Camera::invertPitch() {
+	// If vertical angle is 30 has to be -30
+	verticalAngle = -verticalAngle;
+}
+
 vec3 Camera::getDirection() {
 	return direction;
 }

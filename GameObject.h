@@ -39,14 +39,16 @@ public:
 	static GameObject* skyBox;
 	static GameObject* GetGameObjectWithName(std::string name);
 
+protected:
+
+	bool enabled;
+
 private:
 	// Model Matrix
 	mat4 mMatrix;
 
 	// Normal Matrix
 	mat4 nMatrix;
-
-	bool enabled;
 	bool transparent;
 
 	std::string name;

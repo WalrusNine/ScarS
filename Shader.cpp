@@ -22,15 +22,15 @@ Shader::Shader() {
 
 	this->shadersFilenames[0] = new std::string(dir + "shader.vert");
 	this->shadersFilenames[1] = new std::string(dir + "shader.frag");
-	this->shadersFilenames[2] = new std::string("shadow_shader.frag");
-	this->shadersFilenames[3] = new std::string("shadow_shader.vert");
+	//this->shadersFilenames[2] = new std::string("shadow_shader.vert");
+	//this->shadersFilenames[3] = new std::string("shadow_shader.frag");
 	/*this->shadersFilenames[4] = new std::string(dir + "font_shader.frag");
 	this->shadersFilenames[5] = new std::string(dir + "font_shader.vert");*/
 
 	this->shaderTypes[0] = GL_VERTEX_SHADER;
 	this->shaderTypes[1] = GL_FRAGMENT_SHADER;
-	this->shaderTypes[2] = GL_FRAGMENT_SHADER;
-	this->shaderTypes[3] = GL_VERTEX_SHADER;
+	//this->shaderTypes[2] = GL_VERTEX_SHADER;
+	//this->shaderTypes[3] = GL_FRAGMENT_SHADER;
 	/*this->shaderTypes[4] = GL_FRAGMENT_SHADER;
 	this->shaderTypes[5] = GL_VERTEX_SHADER;/**/
 

@@ -26,12 +26,14 @@
 #include "MultiLayeredHeightmap.h"
 #include "Television.h"
 #include "Shadow.h"
+#include "Fog.h"
+#include "Water.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 
-#define WITH_PLAYER true
+#define WITH_PLAYER false
 
 //GUI* gui;
 Shadow* shadow;
@@ -68,6 +70,7 @@ void Scene::init() {
 	Model::addModel(Model::createGeometry(GEOMETRY_CUBE, Texture::GetTexture("box"), vec4(1.0f), "woodenbox"));
 	Model::addModel(Model::createGeometry(GEOMETRY_CUBE, nullptr, vec4(0.0f, 0.0f, 1.0f, 0.5f), "colorbox"));
 	Model::addModel(Model::createGeometry(GEOMETRY_PLANE, nullptr, vec4(1.0f, 1.0f, 1.0f, 1.0f), "panel"));
+	Model::addModel(Model::createGeometry(GEOMETRY_PLANE, nullptr, vec4(1.0f, 1.0f, 1.0f, 1.0f), "water"));
 	//Model::addModel(Model::createSkybox("data\\skyboxes\\ame_siege\\", { "siege_ft.tga", "siege_bk.tga", "siege_lf.tga", "siege_rt.tga", "siege_up.tga", "siege_dn.tga" }, "siege"));
 	//Model::addModel(Model::createSkybox("data\\skyboxes\\elbrus\\", { "elbrus_front.tga", "elbrus_back.tga", "elbrus_right.tga", "elbrus_left.tga", "elbrus_top.tga", "elbrus_top.tga" }, "siege"));
 	Model::addModel(Model::createSkybox("data\\skyboxes\\jajlands1\\", { "jajlands1_ft.jpg", "jajlands1_bk.jpg", "jajlands1_lf.jpg", "jajlands1_rt.jpg", "jajlands1_up.jpg", "jajlands1_dn.jpg" }, "jajlands1"));
@@ -179,6 +182,13 @@ void Scene::init() {
 	tempBox->model = Model::getModel("woodenbox");
 	tempBox->position = television->position + glm::vec3(.0f, .0f, 3.0f);
 	//GameObject::gameObjects.push_back(tempBox);
+
+	Fog* fog = new Fog();
+	fog->init();
+	GameObject::gameObjects.push_back(fog);
+
+	/*Water* water = new Water();
+	GameObject::gameObjects.push_back(water);*/
 
 
 	// Organize list (transparent objects last)

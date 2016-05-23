@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#define NUMBER_OF_SHADER_TYPES 4
+#define NUMBER_OF_SHADER_TYPES 2
 
 class Shader {
 

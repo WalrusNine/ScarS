@@ -16,12 +16,14 @@ smooth out vec2 s_coord;
 smooth out vec4 s_color;
 smooth out vec3 s_normal;
 smooth out vec3 s_position;
+smooth out vec4 eye_world_pos;
 smooth out vec4 ShadowCoord;
 
 void main()
 {
 	// MVP
 	vec4 world_position = modelMatrix * vec4(a_position, 1.0);
+	eye_world_pos = viewMatrix * world_position;
 	gl_Position = projectionMatrix * viewMatrix * world_position;
 	s_position = world_position.xyz;
 

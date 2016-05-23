@@ -124,6 +124,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Fog.cpp" />
     <ClCompile Include="FrameBuffer.cpp" />
     <ClCompile Include="FrameBufferTexture.cpp" />
     <ClCompile Include="FreeTypeFont.cpp" />
@@ -151,9 +152,11 @@
     <ClCompile Include="VertexBufferObject.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="Water.cpp" />
     <ClCompile Include="Wolf.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Fog.h" />
     <ClInclude Include="FrameBuffer.h" />
     <ClInclude Include="FrameBufferTexture.h" />
     <ClInclude Include="FreeTypeFont.h" />
@@ -180,6 +183,7 @@
     <ClInclude Include="InputController.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="Water.h" />
     <ClInclude Include="Wolf.h" />
   </ItemGroup>
   <ItemGroup>
