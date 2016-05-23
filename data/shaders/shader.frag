@@ -25,7 +25,7 @@ struct directional_light {
 };
 
 // Define struct for SpotLight
-struct spotlight {
+struct s_spotlight {
 	vec3 color;
 	vec3 position;
 	vec3 direction;
@@ -38,11 +38,10 @@ struct spotlight {
 };
 
 uniform directional_light sunlight;
-uniform spotlight left_spotlight;
-uniform spotlight right_spotlight;
+uniform s_spotlight spotlight;
 
 // Spotlight
-vec4 get_spotlight_color (const spotlight s, vec3 world_pos) {
+vec4 get_spotlight_color (const s_spotlight s, vec3 world_pos) {
 	// If flashlight isn't turned on, return no color
 	if(s.isOn == 0) return vec4(0.0, 0.0, 0.0, 0.0);
 
@@ -108,10 +107,8 @@ float GetVisibility(sampler2D ShadowMap, vec4 vShadowCoord) {
       int index = i;
 		  vec4 vShadowSmooth = vec4(vShadowCoord.x + poissonDisk[index].x/700.0, vShadowCoord.y + poissonDisk[index].y/700.0, (vShadowCoord.z-bias)/vShadowCoord.w, 1.0);
 		  float fSub = texture(ShadowMap, vShadowSmooth.st).r; 
-		  visibility -= 0.1*(1.0-fSub);
+		  visibility -= 0.1 * (1.0-fSub);
     }
-    return visibility;
-	
     return visibility;
 }
 
@@ -138,7 +135,7 @@ float getFogFactor(FogParameters params, float fogCoord) {
 	else if(params.equation == 2)
 		result = exp(-pow(params.density*fogCoord, 2.0));
 		
-	result = 1.0-clamp(result, 0.0, 1.0);
+	result = 1.0 - clamp(result, 0.0, 1.0);
 	
 	return result;
 }
@@ -147,7 +144,7 @@ float getFogFactor(FogParameters params, float fogCoord) {
 		WATER
 *********************/
 
-uniform sampler2D reflectionTexture;
+//uniform sampler2D reflectionTexture;
 
 /*********************
 		MAIN
@@ -164,9 +161,7 @@ void main()
 	vec4 dir_light = vec4 (sunlight.color*(sunlight.ambient_intensity + diffuse_intensity), 1.0);
 
 	// Calculate Spotlight
-	vec4 ls_color = get_spotlight_color(left_spotlight, s_position);
-	vec4 rs_color = get_spotlight_color(right_spotlight, s_position);
-	vec4 spotlight_color = ls_color + rs_color;
+	vec4 spotlight_color = get_spotlight_color(spotlight, s_position);
 	
 	// Calculate Shadow
 	float visibility = GetVisibility(shadowMap, ShadowCoord);

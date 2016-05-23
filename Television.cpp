@@ -45,10 +45,20 @@ void Television::stopDrawing() {
 	// Go back
 	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
 	glViewport(0, 0, 1280, 720);
+	Camera::mainCamera->UpdateProjView();
 }
 
 
 
 void Television::update() {
+	startDrawing();
 
+	// Render to Television
+	// Draw objects
+	for (int i = 0; i < (int)GameObject::gameObjects.size(); ++i) {
+		if (GameObject::gameObjects[i] != this)
+			GameObject::gameObjects[i]->draw();
+	}
+		
+	stopDrawing();
 }

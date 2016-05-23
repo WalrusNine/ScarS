@@ -11,6 +11,7 @@ public:
 	~Player();
 
 	void update() override;
+	void setEnabled(bool b) override;
 	//void draw() override;
 
 private:
@@ -25,11 +26,8 @@ private:
 	vec3 direction;
 	vec3 right;
 
-	SpotLight* rightSpotLight;
-	SpotLight* leftSpotLight;
-
-	vec3 rightSpotLightRelativePosition;
-	vec3 leftSpotLightRelativePosition;
+	SpotLight* spotLight;
+	vec3 spotLightRelativePosition;
 
 	float distance;
 };

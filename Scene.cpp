@@ -44,15 +44,8 @@ Scene::Scene() {
 
 void Scene::init() {
 	GameObject::gameObjects.reserve(1);
-	// Create Camera
-	if (WITH_PLAYER) {
-		Camera::mainCamera = Camera::createCamera();
-		GameObject::gameObjects.push_back((GameObject*)Camera::mainCamera);
-	}
-	else {
-		SkyCamera::mainCamera = SkyCamera::createCamera();
-		GameObject::gameObjects.push_back((GameObject*)SkyCamera::mainCamera);
-	}
+	Camera::mainCamera = new Camera();
+	GameObject::gameObjects.push_back(Camera::mainCamera);
 
 	// Create Textures
 	Texture::AddTexture(Texture::CreateTexture("data\\textures\\golddiag.jpg", TEXTURE_FILTER_MAG_BILINEAR, TEXTURE_FILTER_MIN_BILINEAR_MIPMAP, "golddiag", true));
@@ -149,10 +142,8 @@ void Scene::init() {
 	GameObject::gameObjects.push_back(ground);
 
 	// Player
-	if (WITH_PLAYER) {
-		GameObject* player = new Player();
-		GameObject::gameObjects.push_back(player);
-	}
+	GameObject* player = new Player();
+	GameObject::gameObjects.push_back(player);
 
 	// GUI
 	/*gui = new GUI();
@@ -187,9 +178,6 @@ void Scene::init() {
 	fog->init();
 	GameObject::gameObjects.push_back(fog);
 
-	/*Water* water = new Water();
-	GameObject::gameObjects.push_back(water);*/
-
 
 	// Organize list (transparent objects last)
 	int len = (int)GameObject::gameObjects.size();
@@ -211,26 +199,7 @@ void Scene::render() {
 
 	// AssImp
 	Model::BindModelsVAO();
-	{
-		// Render to Television
-		Television* t = (Television*)GameObject::GetGameObjectWithName("television");
-		if (t != nullptr) {
-			t->startDrawing();
-			// Draw objects
-			for (int i = 0; i < (int)GameObject::gameObjects.size(); ++i) {
-				if (GameObject::gameObjects[i] != t)
-					GameObject::gameObjects[i]->draw();
-			}
-
-			// Go back
-			t->stopDrawing();
-		}
-	}
-
-	Camera* camera = Camera::mainCamera;
-	Shader::shader->SetUniform("projectionMatrix", camera->getProjectionMatrix());
-	Shader::shader->SetUniform("viewMatrix", camera->getViewMatrix());
-
+	
 	// Update objects
 	int len = GameObject::gameObjects.size();
 	for (int i = 0; i < len; ++i) {

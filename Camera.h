@@ -28,6 +28,8 @@ public:
 
 	void invertPitch();
 
+	void UpdateProjView();
+
 protected:
 	// Matrices for MVP
 	mat4 viewMatrix;
@@ -46,6 +48,7 @@ protected:
 	// Speed
 	float speed;
 	float zoomSpeed;
+	float movementSpeed;
 
 	virtual void calculateMatrices();
 
@@ -55,4 +58,8 @@ protected:
 	float zoom;
 	float maxZoom;
 	float minZoom;
+
+	bool isSkyCamera;
+	void UpdateSkyCamera();
+	void UpdateCarCamera();
 };

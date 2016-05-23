@@ -19,7 +19,7 @@ public:
 	virtual void draw(bool shadow = false);
 
 	void setTransparent(bool b);
-	void setEnabled(bool b);
+	virtual void setEnabled(bool b);
 
 	bool isTransparent();
 	bool isEnabled();

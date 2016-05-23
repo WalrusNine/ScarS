@@ -1,5 +1,5 @@
 #include "Player.h"
-
+#include <iostream>
 #include <glm\gtx\string_cast.hpp>
 
 
@@ -16,76 +16,66 @@ Player::Player() : GameObject("Player") {
 	attachedCamera->attachGameObject(this, cameraRelativePosition);
 
 	// Set spotlights
-	rightSpotLightRelativePosition = vec3(0.65f, 0.6f, -1.4f);
-	leftSpotLightRelativePosition = vec3(-0.65f, 0.f, -1.4f);
+	spotLightRelativePosition = vec3(-0.65f, 0.f, -1.4f);
 
-	//distance = glm::distance(position, position + leftSpotLightRelativePosition);
 	distance = 0;
 
-	leftSpotLight = new SpotLight(	vec3(1.0f, 1.0f, 1.0f),
+	spotLight = new SpotLight(	vec3(1.0f, 1.0f, 1.0f),
 									position,
 									normalize(-direction),
 									1,
 									15.0f,
 									0.017f );
-	/*rightSpotLight = new SpotLight(	vec3(1.0f, 1.0f, 1.0f),
-									position + rightSpotLightRelativePosition,
-									direction,
-									0,
-									15.0f,
-									0.017f);*/
 }
 
 
 void Player::update() {
-	float deltaTime = FPSController::getDeltaTime();
+	if (enabled) {
+		float deltaTime = FPSController::getDeltaTime();
 
-	right = vec3(
-		sin(glm::radians(steerAngle) - 3.14f / 2.0f),
-		0,
-		cos(glm::radians(steerAngle) - 3.14f / 2.0f)
-		);
+		right = vec3(
+			sin(glm::radians(steerAngle) - 3.14f / 2.0f),
+			0,
+			cos(glm::radians(steerAngle) - 3.14f / 2.0f)
+			);
 
-	direction = vec3(
-		cos(0) * sin(glm::radians(steerAngle)),
-		sin(0),
-		cos(0) * cos(glm::radians(steerAngle))
-		);
-	
-	if (InputController::getInputState(true, GLFW_KEY_W) == INPUT_HELD) {
-		position -= direction * deltaTime * movementSpeed;
+		direction = vec3(
+			cos(0) * sin(glm::radians(steerAngle)),
+			sin(0),
+			cos(0) * cos(glm::radians(steerAngle))
+			);
+
+		if (InputController::getInputState(true, GLFW_KEY_W) == INPUT_HELD) {
+			position -= direction * deltaTime * movementSpeed;
+		}
+		if (InputController::getInputState(true, GLFW_KEY_A) == INPUT_HELD) {
+			steerAngle += deltaTime * steerSpeed;
+		}
+		if (InputController::getInputState(true, GLFW_KEY_S) == INPUT_HELD) {
+			position += direction * deltaTime * movementSpeed;
+		}
+		if (InputController::getInputState(true, GLFW_KEY_D) == INPUT_HELD) {
+			steerAngle -= deltaTime * steerSpeed;
+		}
+		if (InputController::getInputState(true, GLFW_KEY_F) == INPUT_RELEASED) {
+			spotLight->isOn = !spotLight->isOn;
+		}
+
+		// Rotate in Y Axis
+		rotation.y = steerAngle;
+		vec3 dir = glm::normalize(spotLight->position - position);
+		spotLight->position = position;
+
+		spotLight->direction = normalize(-direction);
+
+		spotLight->SetUniformData();
 	}
-	if (InputController::getInputState(true, GLFW_KEY_A) == INPUT_HELD) {
-		steerAngle += deltaTime * steerSpeed;
+}
+
+void Player::setEnabled(bool b) {
+	GameObject::setEnabled(b);
+	if (!b) {
+		spotLight->isOn = false;
+		spotLight->SetUniformData();
 	}
-	if (InputController::getInputState(true, GLFW_KEY_S) == INPUT_HELD) {
-		position += direction * deltaTime * movementSpeed;
-	}
-	if (InputController::getInputState(true, GLFW_KEY_D) == INPUT_HELD) {
-		steerAngle -= deltaTime * steerSpeed;
-	}
-	if (InputController::getInputState(true, GLFW_KEY_F) == INPUT_RELEASED) {
-		leftSpotLight->isOn = !leftSpotLight->isOn;
-		//rightSpotLight->isOn = !rightSpotLight->isOn;
-	}
-	
-	// Rotate in Y Axis
-	rotation.y = steerAngle;
-
-	//leftSpotLight->position = position + leftSpotLightRelativePosition;
-		vec3 dir = glm::normalize(leftSpotLight->position - position);
-		leftSpotLight->position = position;
-		//distance = glm::distance(leftSpotLight->position, position);
-
-	leftSpotLight->direction = normalize(-direction);
-		//leftSpotLight->position = position + leftSpotLightRelativePosition;
-		//leftSpotLight->position = position + distance * vec3(cos(glm::radians(steerAngle)), 0, sin(glm::radians(steerAngle)));
-
-
-
-	//rightSpotLight->direction = normalize(-direction);
-	//rightSpotLight->position = position + rightSpotLightRelativePosition;
-
-	leftSpotLight->setUniformData("left");
-	//rightSpotLight->setUniformData("right");
 }

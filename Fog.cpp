@@ -14,8 +14,21 @@ void Fog::init() {
 }
 
 void Fog::update() {
-	if (InputController::getInputState(true, GLFW_KEY_G) == INPUT_RELEASED) {
+	if (InputController::getInputState(true, GLFW_KEY_Q) == INPUT_RELEASED) {
 		enabled = !enabled;
+		fogColor = glm::vec4(0.7f, 0.7f, 0.7f, 1.0f);
+	}
+	if (InputController::getInputState(true, GLFW_KEY_R) == INPUT_RELEASED) {
+		// Set fog color red
+		fogColor = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+	}
+	if (InputController::getInputState(true, GLFW_KEY_G) == INPUT_RELEASED) {
+		// Set fog color green
+		fogColor = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
+	}
+	if (InputController::getInputState(true, GLFW_KEY_B) == INPUT_RELEASED) {
+		// Set fog color blue
+		fogColor = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
 	}
 
 	if (enabled) density = 0.04f;

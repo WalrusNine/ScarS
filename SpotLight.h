@@ -17,7 +17,7 @@ public:
 	float coneAngle;
 	float linearAtt;
 
-	void setUniformData(std::string lightVarName);
+	void SetUniformData();
 
 	SpotLight();
 	SpotLight(glm::vec3 color, glm::vec3 position, glm::vec3 direction, int isOn, float coneAngle, float linearAtt);

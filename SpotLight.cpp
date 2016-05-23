@@ -21,26 +21,26 @@ SpotLight::SpotLight(glm::vec3 color, glm::vec3 position, glm::vec3 direction, i
 	this->linearAtt = linearAtt;
 }
 
-void SpotLight::setUniformData(std::string name) {
-	int loc = Shader::shader->getUniformLocation(name + "_spotlight.color");
+void SpotLight::SetUniformData() {
+	int loc = Shader::shader->getUniformLocation("spotlight.color");
 	glUniform3fv(loc, 1, (GLfloat*)&color);
 
-	loc = Shader::shader->getUniformLocation(name + "_spotlight.position");
+	loc = Shader::shader->getUniformLocation("spotlight.position");
 	glUniform3fv(loc, 1, (GLfloat*)&position);
 
-	loc = Shader::shader->getUniformLocation(name + "_spotlight.direction");
+	loc = Shader::shader->getUniformLocation("spotlight.direction");
 	glUniform3fv(loc, 1, (GLfloat*)&direction);
 
-	loc = Shader::shader->getUniformLocation(name + "_spotlight.isOn");
+	loc = Shader::shader->getUniformLocation("spotlight.isOn");
 	glUniform1i(loc, isOn);
 
-	loc = Shader::shader->getUniformLocation(name + "_spotlight.coneAngle");
+	loc = Shader::shader->getUniformLocation("spotlight.coneAngle");
 	glUniform1fv(loc, 1, (GLfloat*)&coneAngle);
 
 	coneCosine = float(cos(coneAngle* (3.1415f / 180.0f)));
-	loc = Shader::shader->getUniformLocation(name + "_spotlight.coneCosine");
+	loc = Shader::shader->getUniformLocation("spotlight.coneCosine");
 	glUniform1fv(loc, 1, (GLfloat*)&coneCosine);
 
-	loc = Shader::shader->getUniformLocation(name + "_spotlight.linearAtt");
+	loc = Shader::shader->getUniformLocation("spotlight.linearAtt");
 	glUniform1fv(loc, 1, (GLfloat*)&linearAtt);
 }
