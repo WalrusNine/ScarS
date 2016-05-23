@@ -5,7 +5,16 @@
 #include <string>
 #include <vector>
 
-#define NUMBER_OF_SHADER_TYPES 2
+class ShaderInfo {
+public:
+
+	std::string name;
+	int type;
+	int handle;
+
+	ShaderInfo(std::string n, int t, int h);
+
+};
 
 class Shader {
 
@@ -14,8 +23,8 @@ public:
 	~Shader();
 
 	void init();
-	void bind();
-	void dispose();
+	void bind(std::string name);
+	void dispose(std::string name);
 	int getUniformLocation(std::string varName);
 	int getAttribLocation(std::string varName);
 
@@ -37,23 +46,18 @@ public:
 	void SetAttribute(std::string name, glm::vec2 vec);
 
 	static Shader* shader;
-	//static Shader* GetShader(std::string name);
 
 private:
-	std::string* shadersFilenames[NUMBER_OF_SHADER_TYPES];
-	int shaderTypes[NUMBER_OF_SHADER_TYPES];
-	int shadersHandles[NUMBER_OF_SHADER_TYPES];
-	int handle;
-	int programHandle;
+	std::vector<std::vector<ShaderInfo*>> shaders;
+
+	int currentProgram;
 
 	std::vector<std::string>* readSources();
 	std::string readSource(std::ifstream& source);
 	int compileSource(std::string source, int type);
-	int linkShaders(std::vector<int> shadersHandles);
+	int linkShaders(std::vector<ShaderInfo*> s);
 	
 	void release();
 
 	static std::vector<std::pair<int, std::string>> programs;
-
-	//static std::vector<Shader*> shaders;
 };

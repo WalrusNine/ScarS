@@ -17,65 +17,66 @@ Shader* Shader::shader;
 std::vector<std::pair<int, std::string>> Shader::programs;
 
 Shader::Shader() {
-	handle = -1;
 	std::string dir = "data\\shaders\\";
 
-	this->shadersFilenames[0] = new std::string(dir + "shader.vert");
-	this->shadersFilenames[1] = new std::string(dir + "shader.frag");
-	//this->shadersFilenames[2] = new std::string("shadow_shader.vert");
-	//this->shadersFilenames[3] = new std::string("shadow_shader.frag");
-	/*this->shadersFilenames[4] = new std::string(dir + "font_shader.frag");
-	this->shadersFilenames[5] = new std::string(dir + "font_shader.vert");*/
+	shaders.push_back({
+		new ShaderInfo(dir + "shader.vert", GL_VERTEX_SHADER, -1),
+		new ShaderInfo(dir + "shader.frag", GL_FRAGMENT_SHADER, -1)
+	});
 
-	this->shaderTypes[0] = GL_VERTEX_SHADER;
-	this->shaderTypes[1] = GL_FRAGMENT_SHADER;
-	//this->shaderTypes[2] = GL_VERTEX_SHADER;
-	//this->shaderTypes[3] = GL_FRAGMENT_SHADER;
-	/*this->shaderTypes[4] = GL_FRAGMENT_SHADER;
-	this->shaderTypes[5] = GL_VERTEX_SHADER;/**/
-
-	//shaders.reserve(2);
-	//shaders.push_back(this);
 	shader = this;
 }
 
 Shader::~Shader() {
 	release();
-
-	for (int i = 0; i < NUMBER_OF_SHADER_TYPES; ++i) {
-		delete shadersFilenames[i];
-	}
 }
 
 void Shader::init() {
 	std::vector<std::string>* sources = readSources();
 
-	for (int i = 0; i < NUMBER_OF_SHADER_TYPES; ++i) {
-		shadersHandles[i] = ((*sources)[i].length() > 0) ? compileSource((*sources)[i], shaderTypes[i]) : -1;
-	}
-	// Link 0-3 = main shader
-	handle = linkShaders(std::vector<int>{ shadersHandles[0], shadersHandles[1], shadersHandles[2], shadersHandles[3] });
-	programs.push_back(std::pair<int, std::string>(handle, "main_shader"));
+	int handle;
+	int nShaders = (int)shaders.size();
+	std::vector<std::string> programNames;
+	programNames.push_back("main");
+	programNames.push_back("font");
 
-	/*int temp_handle = linkShaders(std::vector<int>{ shadersHandles[4], shadersHandles[5] });
-	programs.push_back(std::pair<int, std::string>(temp_handle, "font_shader"));*/
+	// Foreach program
+	for (int i = 0; i < nShaders; ++i) {
 
-	for (int i = 0; i < NUMBER_OF_SHADER_TYPES; ++i) {
-		if (shadersHandles[i] >= 0) {
-			glDeleteShader(shadersHandles[i]);
+		// Foreach ShaderInfo
+		for (unsigned int j = 0; j < shaders[i].size(); ++j) {
+			// Set it's handle (compile)
+			shaders[i][j]->handle = ((*sources)[j].length() > 0) ? compileSource((*sources)[j], shaders[i][j]->type) : -1;
+		}
+		// Link
+		handle = linkShaders(shaders[i]);
+		programs.push_back(std::pair<int, std::string>(handle, programNames[i]));
+
+		// Foreach ShaderInfo
+		for (unsigned int j = 0; j < shaders[i].size(); ++j) {
+			ShaderInfo* si = shaders[i][j];
+			// Delete it
+			if (si->handle >= 0) {
+				glDeleteShader(si->handle);
+			}
 		}
 	}
+
+	currentProgram = programs[0].first;
 
 	delete sources;
 }
 
 std::vector<std::string>* Shader::readSources() {
-	std::vector<std::string>* sources = new std::vector<std::string>(NUMBER_OF_SHADER_TYPES);
+	std::vector<std::string>* sources = new std::vector<std::string>(0);
 
-	for (int i = 0; i < NUMBER_OF_SHADER_TYPES; ++i) {
-		if (shadersFilenames[i] != NULL) {
-			std::ifstream source(shadersFilenames[i]->c_str(), std::ifstream::binary);
-			(*sources)[i] = readSource(source);
+	// Foreach program
+	for (unsigned int i = 0; i < shaders.size(); ++i) {
+		// Foreach ShaderInfo
+		for (unsigned int j = 0; j < shaders[i].size(); ++j) {
+			ShaderInfo* si = shaders[i][j];
+			std::ifstream source(si->name.c_str(), std::ifstream::binary);
+			(*sources).push_back(readSource(source));
 		}
 	}
 
@@ -119,33 +120,14 @@ int Shader::compileSource(std::string source, int type) {
 			std::cout << *i;
 		return -1;
 	}
-	/*ERROR treatment
-	else {
-		glGetShaderiv(handle_aux, GL_INFO_LOG_LENGTH, buffer);
-
-		ByteBuffer byteBuffer = Buffers.newDirectByteBuffer(buffer
-			.get(0));
-		glGetShaderInfoLog(handle_aux, byteBuffer.capacity(), buffer,
-			byteBuffer);
-
-		
-		printf("\nshader compile error: ");
-		for (int i = 0; i < buffer.get(0); i++) {
-			System.err.print((char)byteBuffer.get(i));
-		}
-		
-
-		return -1;
-	}
-	*/
 }
 
-int Shader::linkShaders(std::vector<int> shadersHandles) {
+int Shader::linkShaders(std::vector<ShaderInfo*> s) {
 	int programHandle = glCreateProgram();
 
-	for (int i = 0; i < 4; i++) {
-		if (shadersHandles[i] >= 0) {
-			glAttachShader(programHandle, shadersHandles[i]);
+	for (unsigned int i = 0; i < s.size(); i++) {
+		if (s[i]->handle >= 0) {
+			glAttachShader(programHandle, s[i]->handle);
 		}
 	}
 
@@ -160,73 +142,65 @@ int Shader::linkShaders(std::vector<int> shadersHandles) {
 	}
 	else {
 		printf("Couldn't link shaders.\n");
+		char* errorLog = new char[1024];
+		glGetProgramInfoLog(programHandle, 1024, NULL,errorLog);
+		std::cout << errorLog << std::endl;
 		return -1;
 	}
-	/* ERROR handling
-	else {
+}
 
-		glGetProgramiv(programHandle, GL_INFO_LOG_LENGTH, buffer);
-
-		ByteBuffer byteBuffer = Buffers.newDirectByteBuffer(buffer
-			.get(0));
-		glGetProgramInfoLog(programHandle, byteBuffer.capacity(), buffer,
-			byteBuffer);
-
-		System.err.println("\nshader link error: ");
-		for (int i = 0; i < buffer.get(0); i++) {
-			System.err.print((char)byteBuffer.get(i));
-		}
-
-		return -1;
+void Shader::bind(std::string name) {
+	for (unsigned int i = 0; i < programs.size(); ++i) {
+		if (programs[i].second == name) glUseProgram(programs[i].first);
 	}
-	*/
 }
 
-void Shader::bind() {
-	glUseProgram(handle);
-}
-
-void Shader::dispose() {
-	glDeleteProgram(handle);
+void Shader::dispose(std::string name) {
+	for (unsigned int i = 0; i < programs.size(); ++i) {
+		if (programs[i].second == name) glDeleteProgram(programs[i].first);
+	}
 }
 
 int Shader::getUniformLocation(std::string varName) {
-	int location = glGetUniformLocation(handle, varName.c_str());
+	int location = glGetUniformLocation(currentProgram, varName.c_str());
 	if (location < 0) {
-		//System.err.println(varName + " uniform not found.");
+		//std::cout << varName << " uniform not found." << std::endl;
 		return -1;
 	}
 	else {
-		//System.out.println(varName + " uniform found.");
 		return location;
 	}
 }
 
 int Shader::getAttribLocation(std::string varName) {
-	int location = glGetAttribLocation(handle, varName.c_str());
+	int location = glGetAttribLocation(currentProgram, varName.c_str());
 	if (location < 0) {
-		std::cout << varName << " not found." << std::endl;
+		//std::cout << varName << " not found." << std::endl;
 		return -1;
 	}
 	else {
-		//System.out.println(varName + " attribute found");
 		return location;
 	}
 }
 
 void Shader::release() {
-	for (int i = 0; i < NUMBER_OF_SHADER_TYPES; ++i) {
-		if (shadersHandles[i]) {
-			glDetachShader(programHandle, shadersHandles[i]);
-			glDeleteShader(shadersHandles[i]);
-			shadersHandles[i] = 0;
+	// Foreach program
+	for (unsigned int i = 0; i < shaders.size(); ++i) {
+
+		// Foreach ShaderInfo
+		for (unsigned int j = 0; j < shaders[i].size(); ++j) {
+			ShaderInfo* si = shaders[i][j];
+			if (si->handle) {
+				glDetachShader(programs[i].first, si->handle);
+				glDeleteShader(si->handle);
+				si->handle = 0;
+			}
 		}
-	}
 
-	if (programHandle){
-		glDeleteShader(programHandle);
-		programHandle = 0;
-
+		if (programs[i].first) {
+			glDeleteShader(programs[i].first);
+			programs[i].first = 0;
+		}
 	}
 }
 
@@ -313,4 +287,10 @@ void Shader::SetUniform(std::string name, int* values, int count) {
 void Shader::SetUniform(std::string name, int value) {
 	GLuint loc = getUniformLocation(name);
 	glUniform1i(loc, value);
+}
+
+ShaderInfo::ShaderInfo(std::string n, int t, int h) {
+	this->name = n;
+	this->type = t;
+	this->handle = h;
 }

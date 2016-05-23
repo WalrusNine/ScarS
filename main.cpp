@@ -77,7 +77,7 @@ bool initialize(int argc, char* argv[]) {
 	// Load shaders
 	Shader::shader = new Shader();
 	Shader::shader->init();
-	Shader::shader->bind();
+	Shader::shader->bind("main");
 
 	//Set a background color
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);

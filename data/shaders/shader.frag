@@ -32,7 +32,8 @@ struct s_spotlight {
 
 	int isOn;
 
-	float coneAngle, coneCosine;
+	float coneAngle;
+	float coneCosine;
 
 	float linearAtt;
 };
@@ -173,10 +174,3 @@ void main()
 	vec4 final_color = texture_color * s_color * (dir_light + spotlight_color) * visibility;
 	FragColor = mix(final_color, fogParams.fogColor, getFogFactor(fogParams, fogCoord));
 }
-
-
-
-
-
-
-

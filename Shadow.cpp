@@ -58,7 +58,6 @@ void Shadow::update() {
 	glm::mat4 mViewFromLight = glm::lookAt(vLightPos, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 	Shader::shader->SetUniform("projectionMatrix", mPROJ);
 	Shader::shader->SetUniform("viewMatrix", mViewFromLight);
-	Shader::shader->SetUniform("depthVP", mPROJ * mViewFromLight);
 	glm::mat4 biasMatrix(
 		0.5, 0.0, 0.0, 0.0,
 		0.0, 0.5, 0.0, 0.0,

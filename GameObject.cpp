@@ -44,9 +44,6 @@ void GameObject::draw(bool shadow) {
 			// Set uniforms
 			Shader::shader->SetUniform("modelMatrix", mMatrix);
 			Shader::shader->SetUniform("normalMatrix", nMatrix);
-			if (shadow) {
-				Shader::shader->SetUniform("depthModel", mMatrix);
-			}
 
 			// Transparency
 			if (transparent) {
