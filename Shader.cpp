@@ -23,6 +23,11 @@ Shader::Shader() {
 		new ShaderInfo(dir + "shader.vert", GL_VERTEX_SHADER, -1),
 		new ShaderInfo(dir + "shader.frag", GL_FRAGMENT_SHADER, -1)
 	});
+	
+	shaders.push_back({
+		new ShaderInfo(dir + "font_shader.vert", GL_VERTEX_SHADER, -1),
+		new ShaderInfo(dir + "font_shader.frag", GL_FRAGMENT_SHADER, -1)
+	});
 
 	shader = this;
 }
@@ -36,6 +41,7 @@ void Shader::init() {
 
 	int handle;
 	int nShaders = (int)shaders.size();
+	int sourceCounter = 0;
 	std::vector<std::string> programNames;
 	programNames.push_back("main");
 	programNames.push_back("font");
@@ -46,7 +52,8 @@ void Shader::init() {
 		// Foreach ShaderInfo
 		for (unsigned int j = 0; j < shaders[i].size(); ++j) {
 			// Set it's handle (compile)
-			shaders[i][j]->handle = ((*sources)[j].length() > 0) ? compileSource((*sources)[j], shaders[i][j]->type) : -1;
+			shaders[i][j]->handle = ((*sources)[sourceCounter].length() > 0) ? compileSource((*sources)[sourceCounter], shaders[i][j]->type) : -1;
+			++sourceCounter;
 		}
 		// Link
 		handle = linkShaders(shaders[i]);
@@ -151,7 +158,10 @@ int Shader::linkShaders(std::vector<ShaderInfo*> s) {
 
 void Shader::bind(std::string name) {
 	for (unsigned int i = 0; i < programs.size(); ++i) {
-		if (programs[i].second == name) glUseProgram(programs[i].first);
+		if (programs[i].second == name) {
+			glUseProgram(programs[i].first);
+			currentProgram = programs[i].first;
+		}
 	}
 }
 

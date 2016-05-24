@@ -27,16 +27,15 @@
 #include "Television.h"
 #include "Shadow.h"
 #include "Fog.h"
-#include "Water.h"
+#include "FreeTypeFont.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 
-#define WITH_PLAYER false
-
-//GUI* gui;
+GUI* gui;
 Shadow* shadow;
+FreeTypeFont* ftf;
 
 Scene::Scene() {
 	init();
@@ -145,10 +144,6 @@ void Scene::init() {
 	GameObject* player = new Player();
 	GameObject::gameObjects.push_back(player);
 
-	// GUI
-	/*gui = new GUI();
-	gui->setOrtho2D(1280, 720);*/
-
 	// Sun
 	GameObject::sun = new Sun();
 	GameObject::gameObjects.push_back(GameObject::sun);
@@ -178,7 +173,6 @@ void Scene::init() {
 	fog->init();
 	GameObject::gameObjects.push_back(fog);
 
-
 	// Organize list (transparent objects last)
 	int len = (int)GameObject::gameObjects.size();
 	for (int i = 0; i < len; ++i) {
@@ -188,6 +182,11 @@ void Scene::init() {
 			GameObject::gameObjects.push_back(tr);
 		}
 	}
+
+	// GUI
+	gui = new GUI();
+	gui->SetOrtho2D();
+	GameObject::gameObjects.push_back(gui);
 
 	// SHADOW
 	shadow = new Shadow();

@@ -1,6 +1,7 @@
 #include "Television.h"
 
 #include "Camera.h"
+#include "Screen.h"
 
 Television::Television() : GameObject("television") {
 
@@ -44,7 +45,7 @@ void Television::startDrawing() {
 void Television::stopDrawing() {
 	// Go back
 	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
-	glViewport(0, 0, 1280, 720);
+	glViewport(0, 0, Screen::width, Screen::height);
 	Camera::mainCamera->UpdateProjView();
 }
 
@@ -53,10 +54,12 @@ void Television::stopDrawing() {
 void Television::update() {
 	startDrawing();
 
+	GameObject* gui = GameObject::GetGameObjectWithName("gui");
+
 	// Render to Television
 	// Draw objects
 	for (int i = 0; i < (int)GameObject::gameObjects.size(); ++i) {
-		if (GameObject::gameObjects[i] != this)
+		if (GameObject::gameObjects[i] != this && GameObject::gameObjects[i] != gui)
 			GameObject::gameObjects[i]->draw();
 	}
 		

@@ -9,5 +9,5 @@ uniform vec4 vColor;
 void main()
 {
 	vec4 vTexColor = texture2D(gSampler, texCoord);
-	outputColor = vTexColor*vColor;
+	outputColor = vec4(vTexColor.r, vTexColor.r, vTexColor.r, vTexColor.r)*vColor;
 }

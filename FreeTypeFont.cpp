@@ -187,7 +187,7 @@ void FreeTypeFont::Print(string text, int x, int y, int pxSize) {
 		if (text[i] != ' ') {
 			glm::mat4 modelView = glm::translate(glm::mat4(1.0f), glm::vec3(float(curX), float(curY), 0.0f));
 			modelView = glm::scale(modelView, glm::vec3(scale));
-			shader->SetUniform("modelViewMatrix", modelView);
+			shader->SetUniform("modelMatrix", modelView);
 			// Draw character
 			glDrawArrays(GL_TRIANGLE_STRIP, index * 4, 4);
 		}
@@ -226,7 +226,7 @@ void FreeTypeFont::Print(wstring text, int x, int y, int pxSize) {
 		if (text[i] != ' ') {
 			glm::mat4 mModelView = glm::translate(glm::mat4(1.0f), glm::vec3(float(curX), float(curY), 0.0f));
 			mModelView = glm::scale(mModelView, glm::vec3(scale));
-			shader->SetUniform("modelViewMatrix", mModelView);
+			shader->SetUniform("modelMatrix", mModelView);
 			// Draw character
 			glDrawArrays(GL_TRIANGLE_STRIP, index * 4, 4);
 		}

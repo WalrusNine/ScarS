@@ -8,13 +8,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "GameObject.h"
 #include "FPSController.h"
 #include "InputController.h"
 #include "Scene.h"
 #include "Shader.h"
-#include "Camera.h"
-#include "Texture.h"
+#include "Screen.h"
 
 //Declare a window object  
 GLFWwindow* window;
@@ -45,7 +43,8 @@ bool initialize(int argc, char* argv[]) {
 	//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	//Create a window and create its OpenGL context  
-	window = glfwCreateWindow(1280, 720, "Test Window", NULL, NULL);
+	Screen::SetViewportSize(1280, 720);
+	window = glfwCreateWindow(Screen::width, Screen::height, "Test Window", NULL, NULL);
 
 	//If the window couldn't be created  
 	if (!window)

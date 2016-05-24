@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "Sun.h"
 #include "Shader.h"
+#include "Screen.h"
 
 glm::vec3 vShadowMapQuad[] =
 {
@@ -76,7 +77,7 @@ void Shadow::update() {
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glViewport(0, 0, 1280, 720);
+	glViewport(0, 0, Screen::width, Screen::height);
 
 	int texUnit = shadowMap.GetFrameBufferTexture()->GetTextureHandle();
 	Shader::shader->SetUniform("depthBiasMVP", mDepthBiasMVP);

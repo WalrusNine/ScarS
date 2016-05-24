@@ -143,6 +143,7 @@
     <ClCompile Include="MultiLayeredHeightmap.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="Screen.cpp" />
     <ClCompile Include="Shadow.cpp" />
     <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="SkyCamera.cpp" />
@@ -173,6 +174,7 @@
     <ClInclude Include="MultiLayeredHeightmap.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="Screen.h" />
     <ClInclude Include="Shadow.h" />
     <ClInclude Include="Skybox.h" />
     <ClInclude Include="SkyCamera.h" />
