@@ -4,9 +4,15 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "Camera.h"
+#include "FPSController.h"
+#include "Texture.h"
+
 ParticleSystem::ParticleSystem() {
 	initialized = false;
 	curReadBuffer = 0;
+
+	InitalizeParticleSystem();
 }
 
 /*-----------------------------------------------
@@ -35,7 +41,7 @@ bool ParticleSystem::InitalizeParticleSystem() {
 	for (int i = 0; i < 2; ++i) {
 		glBindVertexArray(vao[i]);
 		glBindBuffer(GL_ARRAY_BUFFER, particleBuffer[i]);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(Particle)*MAX_PARTICLES_ON_SCENE, NULL, GL_DYNAMIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(Particle) * MAX_PARTICLES_ON_SCENE, NULL, GL_DYNAMIC_DRAW);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Particle), &partInitialization);
 
 		for (int i = 0; i < NUM_PARTICLE_ATTRIBUTES; ++i) {
@@ -230,4 +236,17 @@ Result:	Retrieves current number of particles.
 
 int ParticleSystem::GetNumParticles() {
 	return numParticles;
+}
+
+void ParticleSystem::SetGenPosition(glm::vec3 pos) {
+	genPosition = pos;
+}
+
+void ParticleSystem::Update() {
+	// Particles
+	// Bind texture
+	Texture::GetTexture("particle")->Bind();
+	SetMatrices(&Camera::mainCamera->getProjectionMatrix(), Camera::mainCamera->getPosition(), Camera::mainCamera->getViewVector(), Camera::mainCamera->getUp());
+	UpdateParticles(FPSController::getDeltaTime());
+	RenderParticles();
 }

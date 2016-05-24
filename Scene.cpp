@@ -35,7 +35,7 @@
 #include <iostream>
 
 Shadow* shadow;
-ParticleSystem* ps;
+//ParticleSystem* ps;
 
 Scene::Scene() {
 	init();
@@ -192,8 +192,7 @@ void Scene::init() {
 	// SHADOW
 	shadow = new Shadow();
 
-	ps = new ParticleSystem();
-	ps->InitalizeParticleSystem();
+	/*ps = new ParticleSystem();
 
 	ps->SetGeneratorProperties(
 		glm::vec3(-10.0f, 17.5f, 0.0f), // Where the particles are generated
@@ -205,7 +204,7 @@ void Scene::init() {
 		3.0f, // Maximum lifetime in seconds
 		0.75f, // Rendered size
 		0.02f, // Spawn every 0.05 seconds
-		30); // And spawn 30 particles
+		30); // And spawn 30 particles*/
 }
 
 void Scene::render() {
@@ -226,13 +225,7 @@ void Scene::render() {
 		GameObject::gameObjects[i]->draw();
 	}
 
-
-	// Particles
-	// Bind texture
-	Texture::GetTexture("particle")->Bind();
-	ps->SetMatrices(&Camera::mainCamera->getProjectionMatrix(), Camera::mainCamera->getPosition(), Camera::mainCamera->getViewVector(), Camera::mainCamera->getUp());
-	ps->UpdateParticles(FPSController::getDeltaTime());
-	ps->RenderParticles();
+	((Player*)GameObject::GetGameObjectWithName("player"))->particles->Update();
 }
 
 Scene::~Scene() {

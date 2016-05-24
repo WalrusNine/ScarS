@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "Camera.h"
 #include "SpotLight.h"
+#include "ParticleSystem.h"
 
 class Player : public GameObject
 {
@@ -12,7 +13,8 @@ public:
 
 	void update() override;
 	void setEnabled(bool b) override;
-	//void draw() override;
+
+	ParticleSystem* particles;
 
 private:
 	Camera* attachedCamera;

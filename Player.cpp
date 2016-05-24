@@ -3,7 +3,7 @@
 #include <glm\gtx\string_cast.hpp>
 
 
-Player::Player() : GameObject("Player") {
+Player::Player() : GameObject("player") {
 	movementSpeed = 20.0f;
 	steerAngle = 0.0f;
 	steerSpeed = 50.0f;
@@ -26,6 +26,19 @@ Player::Player() : GameObject("Player") {
 									1,
 									15.0f,
 									0.017f );
+
+	particles = new ParticleSystem();
+	particles->SetGeneratorProperties(
+		position + glm::vec3(-1.f, 0.f, -1.f), // Where the particles are generated
+		glm::vec3(-5, 0, -5), // Minimal velocity
+		glm::vec3(5, 20, 5), // Maximal velocity
+		glm::vec3(0, -5, 0), // Gravity force applied to particles
+		glm::vec3(0.01f, 0.01f, 0.01f), // Color
+		1.5f, // Minimum lifetime in seconds
+		3.0f, // Maximum lifetime in seconds
+		0.75f, // Rendered size
+		0.02f, // Spawn every 0.05 seconds
+		30); // And spawn 30 particles
 }
 
 
@@ -69,6 +82,9 @@ void Player::update() {
 		spotLight->direction = normalize(-direction);
 
 		spotLight->SetUniformData();
+
+		// Particles
+		particles->SetGenPosition(position + glm::vec3(0, 0, 0));
 	}
 }
 
