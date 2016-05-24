@@ -29,6 +29,17 @@ Shader::Shader() {
 		new ShaderInfo(dir + "font_shader.frag", GL_FRAGMENT_SHADER, -1)
 	});
 
+	shaders.push_back({
+		new ShaderInfo(dir + "particles_update.vert", GL_VERTEX_SHADER, -1),
+		new ShaderInfo(dir + "particles_update.geom", GL_GEOMETRY_SHADER, -1)
+	});
+
+	shaders.push_back({
+		new ShaderInfo(dir + "particles_render.vert", GL_VERTEX_SHADER, -1),
+		new ShaderInfo(dir + "particles_render.geom", GL_GEOMETRY_SHADER, -1),
+		new ShaderInfo(dir + "particles_render.frag", GL_FRAGMENT_SHADER, -1)
+	});
+
 	shader = this;
 }
 
@@ -45,6 +56,8 @@ void Shader::init() {
 	std::vector<std::string> programNames;
 	programNames.push_back("main");
 	programNames.push_back("font");
+	programNames.push_back("particles_update");
+	programNames.push_back("particles_render");
 
 	// Foreach program
 	for (int i = 0; i < nShaders; ++i) {
@@ -55,8 +68,14 @@ void Shader::init() {
 			shaders[i][j]->handle = ((*sources)[sourceCounter].length() > 0) ? compileSource((*sources)[sourceCounter], shaders[i][j]->type) : -1;
 			++sourceCounter;
 		}
+
 		// Link
-		handle = linkShaders(shaders[i]);
+		if (programNames[i] == "particles_update") {
+			handle = linkShaders(shaders[i], true);
+		}
+		else {
+			handle = linkShaders(shaders[i]);
+		}
 		programs.push_back(std::pair<int, std::string>(handle, programNames[i]));
 
 		// Foreach ShaderInfo
@@ -129,12 +148,28 @@ int Shader::compileSource(std::string source, int type) {
 	}
 }
 
-int Shader::linkShaders(std::vector<ShaderInfo*> s) {
+int Shader::linkShaders(std::vector<ShaderInfo*> s, bool varying) {
 	int programHandle = glCreateProgram();
 
 	for (unsigned int i = 0; i < s.size(); i++) {
 		if (s[i]->handle >= 0) {
 			glAttachShader(programHandle, s[i]->handle);
+		}
+	}
+
+	if (varying) {
+		const char* varyings[6] = {
+			"vPositionOut",
+			"vVelocityOut",
+			"vColorOut",
+			"fLifeTimeOut",
+			"fSizeOut",
+			"iTypeOut"
+		};
+
+		for (int i = 0; i < 6; ++i) {
+			glTransformFeedbackVaryings(programHandle, 6, varyings,
+				GL_INTERLEAVED_ATTRIBS);
 		}
 	}
 

@@ -95,7 +95,7 @@ void Camera::calculateMatrices() {
 		viewMatrix = lookAt(position, position + direction, up);
 	}
 	else {
-		vec3 up = vec3(0, 1, 0);
+		up = vec3(0, 1, 0);
 
 		if (attachedGameObject != nullptr)
 			direction = glm::normalize(attachedGameObject->position - position);
@@ -194,8 +194,7 @@ vec3 Camera::getDirection() {
 	return direction;
 }
 
-vec3 Camera::getUp()
-{
+vec3 Camera::getUp() {
 	return up;
 }
 

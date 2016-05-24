@@ -141,6 +141,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="FPSController.cpp" />
     <ClCompile Include="MultiLayeredHeightmap.cpp" />
+    <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Screen.cpp" />
@@ -172,6 +173,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="House.h" />
     <ClInclude Include="MultiLayeredHeightmap.h" />
+    <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Screen.h" />

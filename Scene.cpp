@@ -28,14 +28,14 @@
 #include "Shadow.h"
 #include "Fog.h"
 #include "FreeTypeFont.h"
+#include "ParticleSystem.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 
-GUI* gui;
 Shadow* shadow;
-FreeTypeFont* ftf;
+ParticleSystem* ps;
 
 Scene::Scene() {
 	init();
@@ -50,6 +50,7 @@ void Scene::init() {
 	Texture::AddTexture(Texture::CreateTexture("data\\textures\\golddiag.jpg", TEXTURE_FILTER_MAG_BILINEAR, TEXTURE_FILTER_MIN_BILINEAR_MIPMAP, "golddiag", true));
 	Texture::AddTexture(Texture::CreateTexture("data\\textures\\snow.jpg", TEXTURE_FILTER_MAG_BILINEAR, TEXTURE_FILTER_MIN_BILINEAR_MIPMAP, "snow", true));
 	Texture::AddTexture(Texture::CreateTexture("data\\textures\\box.jpg", TEXTURE_FILTER_MAG_BILINEAR, TEXTURE_FILTER_MIN_BILINEAR_MIPMAP, "box", true));
+	Texture::AddTexture(Texture::CreateTexture("data\\textures\\particle.bmp", TEXTURE_FILTER_MAG_BILINEAR, TEXTURE_FILTER_MIN_BILINEAR_MIPMAP, "particle", true));
 
 	// Create Models
 	Model::addModel(Model::createModel("data\\models\\FireGTO\\FireGTO.blend", "car"));
@@ -184,12 +185,27 @@ void Scene::init() {
 	}
 
 	// GUI
-	gui = new GUI();
+	GUI* gui = new GUI();
 	gui->SetOrtho2D();
 	GameObject::gameObjects.push_back(gui);
 
 	// SHADOW
 	shadow = new Shadow();
+
+	ps = new ParticleSystem();
+	ps->InitalizeParticleSystem();
+
+	ps->SetGeneratorProperties(
+		glm::vec3(-10.0f, 17.5f, 0.0f), // Where the particles are generated
+		glm::vec3(-5, 0, -5), // Minimal velocity
+		glm::vec3(5, 20, 5), // Maximal velocity
+		glm::vec3(0, -5, 0), // Gravity force applied to particles
+		glm::vec3(0.01f, 0.01f, 0.01f), // Color
+		1.5f, // Minimum lifetime in seconds
+		3.0f, // Maximum lifetime in seconds
+		0.75f, // Rendered size
+		0.02f, // Spawn every 0.05 seconds
+		30); // And spawn 30 particles
 }
 
 void Scene::render() {
@@ -209,6 +225,14 @@ void Scene::render() {
 	for (int i = 0; i < len; ++i) {
 		GameObject::gameObjects[i]->draw();
 	}
+
+
+	// Particles
+	// Bind texture
+	Texture::GetTexture("particle")->Bind();
+	ps->SetMatrices(&Camera::mainCamera->getProjectionMatrix(), Camera::mainCamera->getPosition(), Camera::mainCamera->getViewVector(), Camera::mainCamera->getUp());
+	ps->UpdateParticles(FPSController::getDeltaTime());
+	ps->RenderParticles();
 }
 
 Scene::~Scene() {

@@ -55,7 +55,7 @@ private:
 	std::vector<std::string>* readSources();
 	std::string readSource(std::ifstream& source);
 	int compileSource(std::string source, int type);
-	int linkShaders(std::vector<ShaderInfo*> s);
+	int linkShaders(std::vector<ShaderInfo*> s, bool varying = false);
 	
 	void release();
 

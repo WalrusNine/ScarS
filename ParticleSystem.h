@@ -16,15 +16,15 @@ Purpose:	Encapsulates particle and its properties.
 
 *****************************************************/
 
-class CParticle
-{
+class Particle {
 public:
-	glm::vec3 vPosition;
-	glm::vec3 vVelocity;
-	glm::vec3 vColor;
-	float fLifeTime;
-	float fSize;
-	int iType;
+	glm::vec3 position;
+	glm::vec3 velocity;
+	glm::vec3 color;
+
+	float lifeTime;
+	float size;
+	int type;
 };
 
 /**********************************************************************
@@ -35,8 +35,7 @@ Purpose:	Particle system class that uses transform feedback feature.
 
 ***********************************************************************/
 
-class CParticleSystemTransformFeedback
-{
+class ParticleSystem {
 public:
 	bool InitalizeParticleSystem();
 
@@ -52,7 +51,7 @@ public:
 
 	void SetMatrices(glm::mat4* a_matProjection, glm::vec3 vEye, glm::vec3 vView, glm::vec3 vUpVector);
 
-	CParticleSystemTransformFeedback();
+	ParticleSystem();
 
 private:
 	bool initialized;
@@ -83,9 +82,4 @@ private:
 	float genSize;
 
 	int numToGenerate;
-
-	Shader shVertexRender, shGeomRender, shFragRender;
-	Shader shVertexUpdate, shGeomUpdate, shFragUpdate;
-	/*ShaderProgram spRenderParticles;
-	ShaderProgram spUpdateParticles;*/
 };
