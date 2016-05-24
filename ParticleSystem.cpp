@@ -242,6 +242,10 @@ void ParticleSystem::SetGenPosition(glm::vec3 pos) {
 	genPosition = pos;
 }
 
+void ParticleSystem::SetColor(glm::vec3 c) {
+	genColor = c;
+}
+
 void ParticleSystem::Update() {
 	// Particles
 	// Bind texture

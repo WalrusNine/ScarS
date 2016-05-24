@@ -29,7 +29,7 @@ Player::Player() : GameObject("player") {
 
 	particles = new ParticleSystem();
 	particles->SetGeneratorProperties(
-		position + glm::vec3(-1.f, 0.f, -1.f), // Where the particles are generated
+		position, // Where the particles are generated
 		glm::vec3(-5, 0, -5), // Minimal velocity
 		glm::vec3(5, 20, 5), // Maximal velocity
 		glm::vec3(0, -5, 0), // Gravity force applied to particles
@@ -84,7 +84,8 @@ void Player::update() {
 		spotLight->SetUniformData();
 
 		// Particles
-		particles->SetGenPosition(position + glm::vec3(0, 0, 0));
+		particles->SetGenPosition(position);
+		particles->SetColor({ 0.01f, 0.01f, 0.01f });
 	}
 }
 

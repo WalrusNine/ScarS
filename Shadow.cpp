@@ -54,11 +54,11 @@ void Shadow::update() {
 	// Because we have a directional light, we just set it high enough (vLightPos) so that it sees all objects on scene
 	// We also create orthographics projection matrix for the purposes of rendering shadows
 	const float fRangeX = 150, fRangeY = 150, fMinZ = 0.05f, fMaxZ = 400;
-	glm::mat4 mPROJ = glm::ortho<float>(-fRangeX, fRangeX, -fRangeY, fRangeY, fMinZ, fMaxZ);
-	glm::vec3 vLightPos = -(((Sun*)GameObject::sun)->getDirection()) * 150.f;
-	glm::mat4 mViewFromLight = glm::lookAt(vLightPos, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-	Shader::shader->SetUniform("projectionMatrix", mPROJ);
-	Shader::shader->SetUniform("viewMatrix", mViewFromLight);
+	glm::mat4 projectionFromLight = glm::ortho<float>(-fRangeX, fRangeX, -fRangeY, fRangeY, fMinZ, fMaxZ);
+	glm::vec3 lightPos = -(((Sun*)GameObject::sun)->getDirection()) * 150.f;
+	glm::mat4 viewFromLight = glm::lookAt(lightPos, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+	Shader::shader->SetUniform("projectionMatrix", projectionFromLight);
+	Shader::shader->SetUniform("viewMatrix", viewFromLight);
 	glm::mat4 biasMatrix(
 		0.5, 0.0, 0.0, 0.0,
 		0.0, 0.5, 0.0, 0.0,
@@ -67,7 +67,7 @@ void Shadow::update() {
 		);
 
 	// Calculate depth bias matrix to calculate shadow coordinates in shader programs
-	mDepthBiasMVP = biasMatrix * mPROJ * mViewFromLight;
+	mDepthBiasMVP = biasMatrix * projectionFromLight * viewFromLight;
 
 	Model::BindModelsVAO();
 	// Draw objects

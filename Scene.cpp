@@ -225,7 +225,12 @@ void Scene::render() {
 		GameObject::gameObjects[i]->draw();
 	}
 
-	((Player*)GameObject::GetGameObjectWithName("player"))->particles->Update();
+	Player* p = ((Player*)GameObject::GetGameObjectWithName("player"));
+	p->particles->Update();
+
+	/*p->particles->SetGenPosition(glm::vec3(10, 10, 10));
+	p->particles->SetColor({ 0, 0, 1 });
+	p->particles->Update();*/
 }
 
 Scene::~Scene() {
