@@ -35,7 +35,7 @@
 #include <iostream>
 
 Shadow* shadow;
-//ParticleSystem* ps;
+bool rainEnabled = false;
 
 Scene::Scene() {
 	init();
@@ -225,12 +225,25 @@ void Scene::render() {
 		GameObject::gameObjects[i]->draw();
 	}
 
+	if (InputController::getInputState(true, GLFW_KEY_X) == INPUT_RELEASED) {
+		rainEnabled = !rainEnabled;
+	}
+
 	Player* p = ((Player*)GameObject::GetGameObjectWithName("player"));
 	p->particles->Update();
 
-	/*p->particles->SetGenPosition(glm::vec3(10, 10, 10));
-	p->particles->SetColor({ 0, 0, 1 });
-	p->particles->Update();*/
+	if (rainEnabled) {
+		p->particles->SetGenPosition(glm::vec3(Camera::mainCamera->position.x, Camera::mainCamera->position.y + 50, Camera::mainCamera->position.z));
+		p->particles->SetColor({ 0, 0, 0.7f });
+		p->particles->SetLifeTime(2, 4);
+		p->particles->SetRenderedSize(0.2f);
+		p->particles->SetGravity({ 0, -10, 0 });
+	}
+	else {
+		p->particles->SetLifeTime(0, 0);
+	}
+
+	p->particles->Update();
 }
 
 Scene::~Scene() {

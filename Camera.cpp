@@ -49,7 +49,7 @@ vec3 Camera::getPosition() {
 void Camera::update() {
 	if (InputController::getInputState(true, GLFW_KEY_Z) == INPUT_RELEASED) {
 		isSkyCamera = !isSkyCamera;
-		Player* player = (Player*)GameObject::GetGameObjectWithName("Player");
+		Player* player = (Player*)GameObject::GetGameObjectWithName("player");
 		player->setEnabled(!isSkyCamera);
 	}
 

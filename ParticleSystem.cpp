@@ -246,6 +246,19 @@ void ParticleSystem::SetColor(glm::vec3 c) {
 	genColor = c;
 }
 
+void ParticleSystem::SetLifeTime(float min, float max) {
+	genLifeMin = min;
+	genLifeRange = max;
+}
+
+void ParticleSystem::SetRenderedSize(float s) {
+	genSize = s;
+}
+
+void ParticleSystem::SetGravity(glm::vec3 v) {
+	genGravityVector = v;
+}
+
 void ParticleSystem::Update() {
 	// Particles
 	// Bind texture

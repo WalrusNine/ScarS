@@ -28,6 +28,7 @@ Player::Player() : GameObject("player") {
 									0.017f );
 
 	particles = new ParticleSystem();
+	smokeEnabled = false;
 	particles->SetGeneratorProperties(
 		position, // Where the particles are generated
 		glm::vec3(-5, 0, -5), // Minimal velocity
@@ -73,6 +74,9 @@ void Player::update() {
 		if (InputController::getInputState(true, GLFW_KEY_F) == INPUT_RELEASED) {
 			spotLight->isOn = !spotLight->isOn;
 		}
+		if (InputController::getInputState(true, GLFW_KEY_V) == INPUT_RELEASED) {
+			smokeEnabled = !smokeEnabled;
+		}
 
 		// Rotate in Y Axis
 		rotation.y = steerAngle;
@@ -84,8 +88,16 @@ void Player::update() {
 		spotLight->SetUniformData();
 
 		// Particles
-		particles->SetGenPosition(position);
-		particles->SetColor({ 0.01f, 0.01f, 0.01f });
+		if (smokeEnabled) {
+			particles->SetGenPosition(position);
+			particles->SetColor({ 0.01f, 0.01f, 0.01f });
+			particles->SetLifeTime(1.5f, 3.0f);
+			particles->SetRenderedSize(0.75f);
+			particles->SetGravity({ 0, -5, 0 });
+		}
+		else {
+			particles->SetLifeTime(0, 0);
+		}
 	}
 }
 

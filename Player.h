@@ -32,4 +32,6 @@ private:
 	vec3 spotLightRelativePosition;
 
 	float distance;
+
+	bool smokeEnabled;
 };

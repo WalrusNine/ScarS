@@ -11,6 +11,7 @@ void Fog::init() {
 	end = 75.0f;
 	fogColor = glm::vec4(0.7f, 0.7f, 0.7f, 1.0f);
 	fogEquation = 1; // 0 = linear, 1 = exp, 2 = exp2
+	enabled = false;
 }
 
 void Fog::update() {
