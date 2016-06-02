@@ -8,16 +8,9 @@
 #define PARTICLE_TYPE_GENERATOR 0
 #define PARTICLE_TYPE_NORMAL 1
 
-/*****************************************************
-
-Class:		CParticle
-
-Purpose:	Encapsulates particle and its properties.
-
-*****************************************************/
-
 class Particle {
 public:
+
 	glm::vec3 position;
 	glm::vec3 velocity;
 	glm::vec3 color;
@@ -27,16 +20,11 @@ public:
 	int type;
 };
 
-/**********************************************************************
-
-Class:		CParticleSystemTransformFeedback
-
-Purpose:	Particle system class that uses transform feedback feature.
-
-***********************************************************************/
-
 class ParticleSystem {
 public:
+
+	static ParticleSystem* particleSystem;
+
 	bool InitalizeParticleSystem();
 
 	void RenderParticles();
@@ -50,8 +38,6 @@ public:
 	void SetGravity(glm::vec3 v);
 
 	void Update();
-	void ClearAllParticles();
-	bool ReleaseParticleSystem();
 
 	int GetNumParticles();
 

@@ -29,13 +29,13 @@
 #include "Fog.h"
 #include "FreeTypeFont.h"
 #include "ParticleSystem.h"
+#include "Rain.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 
 Shadow* shadow;
-bool rainEnabled = false;
 
 Scene::Scene() {
 	init();
@@ -64,8 +64,6 @@ void Scene::init() {
 	Model::addModel(Model::createGeometry(GEOMETRY_CUBE, nullptr, vec4(0.0f, 0.0f, 1.0f, 0.5f), "colorbox"));
 	Model::addModel(Model::createGeometry(GEOMETRY_PLANE, nullptr, vec4(1.0f, 1.0f, 1.0f, 1.0f), "panel"));
 	Model::addModel(Model::createGeometry(GEOMETRY_PLANE, nullptr, vec4(1.0f, 1.0f, 1.0f, 1.0f), "water"));
-	//Model::addModel(Model::createSkybox("data\\skyboxes\\ame_siege\\", { "siege_ft.tga", "siege_bk.tga", "siege_lf.tga", "siege_rt.tga", "siege_up.tga", "siege_dn.tga" }, "siege"));
-	//Model::addModel(Model::createSkybox("data\\skyboxes\\elbrus\\", { "elbrus_front.tga", "elbrus_back.tga", "elbrus_right.tga", "elbrus_left.tga", "elbrus_top.tga", "elbrus_top.tga" }, "siege"));
 	Model::addModel(Model::createSkybox("data\\skyboxes\\jajlands1\\", { "jajlands1_ft.jpg", "jajlands1_bk.jpg", "jajlands1_lf.jpg", "jajlands1_rt.jpg", "jajlands1_up.jpg", "jajlands1_dn.jpg" }, "jajlands1"));
 	Model::FinalizeVBO();
 	
@@ -174,6 +172,9 @@ void Scene::init() {
 	fog->init();
 	GameObject::gameObjects.push_back(fog);
 
+	Rain* rain = new Rain();
+	GameObject::gameObjects.push_back(rain);
+
 	// Organize list (transparent objects last)
 	int len = (int)GameObject::gameObjects.size();
 	for (int i = 0; i < len; ++i) {
@@ -192,10 +193,10 @@ void Scene::init() {
 	// SHADOW
 	shadow = new Shadow();
 
-	/*ps = new ParticleSystem();
-
-	ps->SetGeneratorProperties(
-		glm::vec3(-10.0f, 17.5f, 0.0f), // Where the particles are generated
+	// PARTICLES
+	ParticleSystem::particleSystem = new ParticleSystem();
+	ParticleSystem::particleSystem->SetGeneratorProperties(
+		glm::vec3(0, 0, 0), // Where the particles are generated
 		glm::vec3(-5, 0, -5), // Minimal velocity
 		glm::vec3(5, 20, 5), // Maximal velocity
 		glm::vec3(0, -5, 0), // Gravity force applied to particles
@@ -204,7 +205,7 @@ void Scene::init() {
 		3.0f, // Maximum lifetime in seconds
 		0.75f, // Rendered size
 		0.02f, // Spawn every 0.05 seconds
-		30); // And spawn 30 particles*/
+		30); // And spawn 30 particles
 }
 
 void Scene::render() {
@@ -213,7 +214,7 @@ void Scene::render() {
 
 	// AssImp
 	Model::BindModelsVAO();
-	
+
 	// Update objects
 	int len = GameObject::gameObjects.size();
 	for (int i = 0; i < len; ++i) {
@@ -225,25 +226,10 @@ void Scene::render() {
 		GameObject::gameObjects[i]->draw();
 	}
 
-	if (InputController::getInputState(true, GLFW_KEY_X) == INPUT_RELEASED) {
-		rainEnabled = !rainEnabled;
+	// Particles
+	for (int i = 0; i < len; ++i) {
+		GameObject::gameObjects[i]->UpdateParticles();
 	}
-
-	Player* p = ((Player*)GameObject::GetGameObjectWithName("player"));
-	p->particles->Update();
-
-	if (rainEnabled) {
-		p->particles->SetGenPosition(glm::vec3(Camera::mainCamera->position.x, Camera::mainCamera->position.y + 50, Camera::mainCamera->position.z));
-		p->particles->SetColor({ 0, 0, 0.7f });
-		p->particles->SetLifeTime(2, 4);
-		p->particles->SetRenderedSize(0.2f);
-		p->particles->SetGravity({ 0, -10, 0 });
-	}
-	else {
-		p->particles->SetLifeTime(0, 0);
-	}
-
-	p->particles->Update();
 }
 
 Scene::~Scene() {
@@ -254,6 +240,8 @@ Scene::~Scene() {
 	}
 
 	delete shadow;
+
+	delete ParticleSystem::particleSystem;
 
 	// Unload all models
 	Model::ClearModels();

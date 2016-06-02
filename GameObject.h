@@ -8,6 +8,7 @@ using namespace glm;
 #include "Model.h"
 #include "FPSController.h"
 #include "InputController.h"
+#include "ParticleSystem.h"
 
 class GameObject {
 
@@ -17,6 +18,7 @@ public:
 	// Basic object
 	virtual void update();
 	virtual void draw(bool shadow = false);
+	virtual void UpdateParticles();
 
 	void setTransparent(bool b);
 	virtual void setEnabled(bool b);
@@ -42,6 +44,7 @@ public:
 protected:
 
 	bool enabled;
+	ParticleSystem* particles;
 
 private:
 	// Model Matrix

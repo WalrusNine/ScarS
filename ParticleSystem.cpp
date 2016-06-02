@@ -8,11 +8,15 @@
 #include "FPSController.h"
 #include "Texture.h"
 
+ParticleSystem* ParticleSystem::particleSystem = nullptr;
+
 ParticleSystem::ParticleSystem() {
 	initialized = false;
 	curReadBuffer = 0;
 
 	InitalizeParticleSystem();
+
+	particleSystem = this;
 }
 
 /*-----------------------------------------------
@@ -171,19 +175,6 @@ void ParticleSystem::RenderParticles() {
 	Shader::shader->bind("main");
 }
 
-/*-----------------------------------------------
-
-Name:	SetMatrices
-
-Params:	a_matProjection - projection matrix
-vEye, vView, vUpVector - definition of view matrix
-
-Result:	Sets the projection matrix and view matrix,
-that shaders of transform feedback particle system
-need.
-
-/*---------------------------------------------*/
-
 void ParticleSystem::SetMatrices(glm::mat4* a_matProjection, glm::vec3 vEye, glm::vec3 vView, glm::vec3 vUpVector) {
 	projection = *a_matProjection;
 
@@ -195,16 +186,6 @@ void ParticleSystem::SetMatrices(glm::mat4* a_matProjection, glm::vec3 vEye, glm
 	quad2 = glm::cross(vView, quad1);
 	quad2 = glm::normalize(quad2);
 }
-
-/*-----------------------------------------------
-
-Name:	SetGeneratorProperties
-
-Params:	many properties of particle generation
-
-Result:	Guess what it does :)
-
-/*---------------------------------------------*/
 
 void ParticleSystem::SetGeneratorProperties(glm::vec3 a_vGenPosition, glm::vec3 a_vGenVelocityMin, glm::vec3 a_vGenVelocityMax, glm::vec3 a_vGenGravityVector, glm::vec3 a_vGenColor, float a_fGenLifeMin, float a_fGenLifeMax, float a_fGenSize, float fEvery, int a_iNumToGenerate) {
 	genPosition = a_vGenPosition;
@@ -223,16 +204,6 @@ void ParticleSystem::SetGeneratorProperties(glm::vec3 a_vGenPosition, glm::vec3 
 
 	numToGenerate = a_iNumToGenerate;
 }
-
-/*-----------------------------------------------
-
-Name:	GetNumParticles
-
-Params:	none
-
-Result:	Retrieves current number of particles.
-
-/*---------------------------------------------*/
 
 int ParticleSystem::GetNumParticles() {
 	return numParticles;

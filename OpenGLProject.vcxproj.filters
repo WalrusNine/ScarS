@@ -117,6 +117,9 @@
     <ClCompile Include="ParticleSystem.cpp">
       <Filter>Source Files\RenderBasics</Filter>
     </ClCompile>
+    <ClCompile Include="Rain.cpp">
+      <Filter>Source Files\GameObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FrameBuffer.h">
@@ -210,6 +213,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ParticleSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Rain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

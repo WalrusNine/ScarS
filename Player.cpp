@@ -27,19 +27,9 @@ Player::Player() : GameObject("player") {
 									15.0f,
 									0.017f );
 
-	particles = new ParticleSystem();
+	particles = ParticleSystem::particleSystem;
 	smokeEnabled = false;
-	particles->SetGeneratorProperties(
-		position, // Where the particles are generated
-		glm::vec3(-5, 0, -5), // Minimal velocity
-		glm::vec3(5, 20, 5), // Maximal velocity
-		glm::vec3(0, -5, 0), // Gravity force applied to particles
-		glm::vec3(0.01f, 0.01f, 0.01f), // Color
-		1.5f, // Minimum lifetime in seconds
-		3.0f, // Maximum lifetime in seconds
-		0.75f, // Rendered size
-		0.02f, // Spawn every 0.05 seconds
-		30); // And spawn 30 particles
+	
 }
 
 
@@ -88,7 +78,7 @@ void Player::update() {
 		spotLight->SetUniformData();
 
 		// Particles
-		if (smokeEnabled) {
+		/*if (smokeEnabled) {
 			particles->SetGenPosition(position);
 			particles->SetColor({ 0.01f, 0.01f, 0.01f });
 			particles->SetLifeTime(1.5f, 3.0f);
@@ -97,8 +87,28 @@ void Player::update() {
 		}
 		else {
 			particles->SetLifeTime(0, 0);
-		}
+		}*/
 	}
+}
+
+void Player::draw(bool shadow) {
+	GameObject::draw(shadow);
+}
+
+void Player::UpdateParticles() {
+	// Particles
+	if (smokeEnabled) {
+		ParticleSystem::particleSystem->SetGenPosition(position);
+		ParticleSystem::particleSystem->SetColor({ 0.01f, 0.01f, 0.01f });
+		ParticleSystem::particleSystem->SetLifeTime(1.5f, 3.0f);
+		ParticleSystem::particleSystem->SetRenderedSize(0.75f);
+		ParticleSystem::particleSystem->SetGravity({ 0, -5, 0 });
+	}
+	else {
+		ParticleSystem::particleSystem->SetLifeTime(0, 0);
+	}
+
+	ParticleSystem::particleSystem->Update();
 }
 
 void Player::setEnabled(bool b) {

@@ -63,6 +63,8 @@ void GameObject::draw(bool shadow) {
 	}
 }
 
+void GameObject::UpdateParticles() {}
+
 void GameObject::setTransparent(bool b) {
 	transparent = b;
 }

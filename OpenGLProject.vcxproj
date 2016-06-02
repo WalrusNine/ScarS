@@ -143,6 +143,7 @@
     <ClCompile Include="MultiLayeredHeightmap.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Rain.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Screen.cpp" />
     <ClCompile Include="Shadow.cpp" />
@@ -175,6 +176,7 @@
     <ClInclude Include="MultiLayeredHeightmap.h" />
     <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Rain.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Screen.h" />
     <ClInclude Include="Shadow.h" />

@@ -12,6 +12,8 @@ public:
 	~Player();
 
 	void update() override;
+	void draw(bool shadow = false) override;
+	void UpdateParticles() override;
 	void setEnabled(bool b) override;
 
 	ParticleSystem* particles;
