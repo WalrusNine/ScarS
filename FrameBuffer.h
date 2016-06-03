@@ -9,6 +9,7 @@
 class FrameBuffer {
 public:
 	bool CreateFramebufferWithTexture(int width, int height);
+	bool CreateFrameBufferForDepthShadow(int width, int height);
 
 	bool AddDepthBuffer();
 	void BindFramebuffer(bool setFullViewport = true);

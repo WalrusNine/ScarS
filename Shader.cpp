@@ -47,8 +47,8 @@ Shader::~Shader() {
 	release();
 
 	// Release shader info
-	for (int i = 0; i < shaders.size(); ++i) {
-		for (int j = 0; j < shaders[i].size(); ++j) {
+	for (int i = 0; i < (int)shaders.size(); ++i) {
+		for (int j = 0; j < (int)shaders[i].size(); ++j) {
 			delete shaders[i][j];
 		}
 	}

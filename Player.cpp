@@ -7,7 +7,7 @@ Player::Player() : GameObject("player") {
 	movementSpeed = 20.0f;
 	steerAngle = 0.0f;
 	steerSpeed = 50.0f;
-	position = vec3(10, -9.8f, 20);
+	position = vec3(10, -9.7f, 20);
 
 	model = Model::getModel("car");
 
@@ -30,8 +30,19 @@ Player::Player() : GameObject("player") {
 	particles = ParticleSystem::particleSystem;
 	smokeEnabled = false;
 	
+	// Car shadow
+	carShadow = new GameObject("carshadow");
+	carShadow->model = Model::getModel("carshadow");
+	carShadow->setTransparent(true);
+	carShadow->scale.z *= 2.0f;
+	carShadow->position = position;
+	GameObject::gameObjects.push_back(carShadow);
 }
 
+Player::~Player() {
+	delete carShadow;
+	delete spotLight;
+}
 
 void Player::update() {
 	if (enabled) {
@@ -70,6 +81,7 @@ void Player::update() {
 
 		// Rotate in Y Axis
 		rotation.y = steerAngle;
+		carShadow->rotation.y = steerAngle;
 		vec3 dir = glm::normalize(spotLight->position - position);
 		spotLight->position = position;
 
@@ -77,17 +89,7 @@ void Player::update() {
 
 		spotLight->SetUniformData();
 
-		// Particles
-		/*if (smokeEnabled) {
-			particles->SetGenPosition(position);
-			particles->SetColor({ 0.01f, 0.01f, 0.01f });
-			particles->SetLifeTime(1.5f, 3.0f);
-			particles->SetRenderedSize(0.75f);
-			particles->SetGravity({ 0, -5, 0 });
-		}
-		else {
-			particles->SetLifeTime(0, 0);
-		}*/
+		carShadow->position = position;
 	}
 }
 
@@ -113,6 +115,8 @@ void Player::UpdateParticles() {
 
 void Player::setEnabled(bool b) {
 	GameObject::setEnabled(b);
+	if (carShadow) carShadow->setEnabled(b);
+
 	if (!b) {
 		spotLight->isOn = false;
 		spotLight->SetUniformData();

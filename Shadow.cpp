@@ -40,6 +40,7 @@ Shadow::Shadow() {
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec3) + sizeof(glm::vec2), (void*)sizeof(glm::vec3));
 
 
+	//shadowMap.CreateFrameBufferForDepthShadow(textureSize, textureSize);
 	shadowMap.CreateFramebufferWithTexture(textureSize, textureSize);
 	shadowMap.AddDepthBuffer();
 	shadowMap.SetFramebufferTextureFiltering(TEXTURE_FILTER_MAG_BILINEAR, TEXTURE_FILTER_MIN_NEAREST);
@@ -53,9 +54,9 @@ void Shadow::update() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	// Because we have a directional light, we just set it high enough (vLightPos) so that it sees all objects on scene
 	// We also create orthographics projection matrix for the purposes of rendering shadows
-	const float fRangeX = 150, fRangeY = 150, fMinZ = 0.05f, fMaxZ = 400;
+	const float fRangeX = 150, fRangeY = 150, fMinZ = 0.125f, fMaxZ = 512;
 	glm::mat4 projectionFromLight = glm::ortho<float>(-fRangeX, fRangeX, -fRangeY, fRangeY, fMinZ, fMaxZ);
-	glm::vec3 lightPos = -(((Sun*)GameObject::sun)->getDirection()) * 150.f;
+	glm::vec3 lightPos = -(((Sun*)GameObject::sun)->getDirection()) * 256.f;
 	glm::mat4 viewFromLight = glm::lookAt(lightPos, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 	Shader::shader->SetUniform("projectionMatrix", projectionFromLight);
 	Shader::shader->SetUniform("viewMatrix", viewFromLight);

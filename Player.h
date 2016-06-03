@@ -36,4 +36,6 @@ private:
 	float distance;
 
 	bool smokeEnabled;
+
+	GameObject* carShadow;
 };

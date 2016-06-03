@@ -101,17 +101,29 @@ float GetVisibility(sampler2D ShadowMap, vec4 vShadowCoord) {
     float visibility = 1.0;
     float bias = 0.005;
  
-    vec4 shadowCoordinateWdivide = vec4(vShadowCoord.x/vShadowCoord.w, vShadowCoord.y/vShadowCoord.w, (vShadowCoord.z-bias)/vShadowCoord.w, 1.0) ;
+    //vec4 shadowCoordinateWdivide = vec4(vShadowCoord.x/vShadowCoord.w, vShadowCoord.y/vShadowCoord.w, (vShadowCoord.z-bias)/vShadowCoord.w, 1.0) ;
 
-    for (int i=0;i<4;i++)
-    {
-      int index = i;
-		  vec4 vShadowSmooth = vec4(vShadowCoord.x + poissonDisk[index].x/700.0, vShadowCoord.y + poissonDisk[index].y/700.0, (vShadowCoord.z-bias)/vShadowCoord.w, 1.0);
-		  float fSub = texture(ShadowMap, vShadowSmooth.st).r; 
-		  visibility -= 0.1 * (1.0-fSub);
+    for (int i=0;i<4;i++) {
+		int index = i;
+		vec4 vShadowSmooth = vec4(vShadowCoord.x + poissonDisk[index].x/700.0, vShadowCoord.y + poissonDisk[index].y/700.0, (vShadowCoord.z-bias)/vShadowCoord.w, 1.0);
+		float fSub = texture(ShadowMap, vShadowSmooth.st).r;
+
+		visibility -= 0.1 * (1.0-fSub);
     }
+
     return visibility;
 }
+
+/*float GetVisibility(sampler2D ShadowMap, vec4 vShadowCoord) {
+    float visibility = 1.0;
+    float bias = 0.005;
+ 
+    if (texture(ShadowMap, vShadowCoord.xy).z < vShadowCoord.z - bias) {
+		visibility = 0.5;
+	}
+
+	return visibility;
+}*/
 
 /*********************
 		FOG

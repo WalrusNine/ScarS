@@ -22,11 +22,11 @@ void Skybox::update() {
 }
 
 void Skybox::draw(bool shadow) {
-	if (model != nullptr && !shadow) {
+	//if (model != nullptr && !shadow) {
 		// Depth mask = 0 => draw before anything,
 		// so that it always stay away from anything in the scene
 		glDepthMask(0);
 		GameObject::draw();
 		glDepthMask(1);
-	}
+	//}
 }

@@ -130,7 +130,6 @@
     <ClCompile Include="FreeTypeFont.cpp" />
     <ClCompile Include="Geometry.cpp" />
     <ClCompile Include="GUI.cpp" />
-    <ClCompile Include="HeadLamp.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -140,7 +139,6 @@
     <ClCompile Include="InputController.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="FPSController.cpp" />
-    <ClCompile Include="MultiLayeredHeightmap.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Rain.cpp" />
@@ -155,7 +153,6 @@
     <ClCompile Include="VertexBufferObject.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="Water.cpp" />
     <ClCompile Include="Wolf.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -165,15 +162,12 @@
     <ClInclude Include="FreeTypeFont.h" />
     <ClInclude Include="Geometry.h" />
     <ClInclude Include="GUI.h" />
-    <ClInclude Include="HeadLamp.h" />
-    <ClInclude Include="Material.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Car.h" />
     <ClInclude Include="FPSController.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="House.h" />
-    <ClInclude Include="MultiLayeredHeightmap.h" />
     <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Rain.h" />
@@ -189,7 +183,6 @@
     <ClInclude Include="InputController.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Texture.h" />
-    <ClInclude Include="Water.h" />
     <ClInclude Include="Wolf.h" />
   </ItemGroup>
   <ItemGroup>
@@ -197,8 +190,6 @@
     <None Include="data\shaders\font_shader.vert" />
     <None Include="data\shaders\shader.frag" />
     <None Include="data\shaders\shader.vert" />
-    <None Include="data\shaders\shadow_shader.frag" />
-    <None Include="data\shaders\shadow_shader.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

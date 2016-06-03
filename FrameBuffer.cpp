@@ -24,13 +24,34 @@ render to.
 
 /*---------------------------------------------*/
 
+bool FrameBuffer::CreateFrameBufferForDepthShadow(int width, int height) {
+	if (framebuffer != 0) {
+		return false;
+	}
+
+	glGenFramebuffers(1, &framebuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+
+	framebufferTex = new FrameBufferTexture();
+	framebufferTex->CreateDepthTexture(width, height);
+
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, framebufferTex->GetTextureHandle(), 0);
+
+	//glDrawBuffers(0, NULL); glReadBuffer(GL_NONE);
+
+	this->width = width;
+	this->height = height;
+
+	return glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE;
+}
+
 bool FrameBuffer::CreateFramebufferWithTexture(int w, int h) {
 	if (framebuffer != 0) return false;
 
 	glGenFramebuffers(1, &framebuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 	framebufferTex = new FrameBufferTexture();
-	framebufferTex->CreateEmptyTexture(w, h, 24, GL_RGB);
+	framebufferTex->CreateEmptyTexture(w, h, 8, GL_RGB);
 
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, framebufferTex->GetTextureHandle(), 0);
 

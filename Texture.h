@@ -26,6 +26,7 @@ public:
 
 	void CreateFromData(GLubyte* data, int width, int height, int bpp, GLenum format, bool generateMipMaps, bool pixelStore = false);
 	void CreateEmptyTexture(int width, int height, int bpp, GLenum format);
+	void CreateDepthTexture(int width, int height);
 	bool LoadTexture2D(std::string filepath, bool generateMipMaps = false);
 	void UnloadTexture();
 

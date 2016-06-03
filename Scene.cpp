@@ -23,7 +23,6 @@
 #include "SpotLight.h"
 #include "Sun.h"
 #include "FrameBuffer.h"
-#include "MultiLayeredHeightmap.h"
 #include "Television.h"
 #include "Shadow.h"
 #include "Fog.h"
@@ -47,6 +46,7 @@ void Scene::init() {
 	GameObject::gameObjects.push_back(Camera::mainCamera);
 
 	// Create Textures
+	Texture::AddTexture(Texture::CreateTexture("data\\textures\\none.jpg", TEXTURE_FILTER_MAG_BILINEAR, TEXTURE_FILTER_MIN_BILINEAR_MIPMAP, "none", true));
 	Texture::AddTexture(Texture::CreateTexture("data\\textures\\golddiag.jpg", TEXTURE_FILTER_MAG_BILINEAR, TEXTURE_FILTER_MIN_BILINEAR_MIPMAP, "golddiag", true));
 	Texture::AddTexture(Texture::CreateTexture("data\\textures\\snow.jpg", TEXTURE_FILTER_MAG_BILINEAR, TEXTURE_FILTER_MIN_BILINEAR_MIPMAP, "snow", true));
 	Texture::AddTexture(Texture::CreateTexture("data\\textures\\box.jpg", TEXTURE_FILTER_MAG_BILINEAR, TEXTURE_FILTER_MIN_BILINEAR_MIPMAP, "box", true));
@@ -63,7 +63,7 @@ void Scene::init() {
 	Model::addModel(Model::createGeometry(GEOMETRY_CUBE, Texture::GetTexture("box"), vec4(1.0f), "woodenbox"));
 	Model::addModel(Model::createGeometry(GEOMETRY_CUBE, nullptr, vec4(0.0f, 0.0f, 1.0f, 0.5f), "colorbox"));
 	Model::addModel(Model::createGeometry(GEOMETRY_PLANE, nullptr, vec4(1.0f, 1.0f, 1.0f, 1.0f), "panel"));
-	Model::addModel(Model::createGeometry(GEOMETRY_PLANE, nullptr, vec4(1.0f, 1.0f, 1.0f, 1.0f), "water"));
+	Model::addModel(Model::createGeometry(GEOMETRY_PLANE, nullptr, vec4(0.0f, 0.0f, 0.0f, 0.5f), "carshadow"));
 	Model::addModel(Model::createSkybox("data\\skyboxes\\jajlands1\\", { "jajlands1_ft.jpg", "jajlands1_bk.jpg", "jajlands1_lf.jpg", "jajlands1_rt.jpg", "jajlands1_up.jpg", "jajlands1_dn.jpg" }, "jajlands1"));
 	Model::FinalizeVBO();
 	
@@ -162,11 +162,6 @@ void Scene::init() {
 	Television* television = new Television();
 	television->create();
 	GameObject::gameObjects.push_back(television);
-
-	GameObject* tempBox = new GameObject("tempbox");
-	tempBox->model = Model::getModel("woodenbox");
-	tempBox->position = television->position + glm::vec3(.0f, .0f, 3.0f);
-	//GameObject::gameObjects.push_back(tempBox);
 
 	Fog* fog = new Fog();
 	fog->init();

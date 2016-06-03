@@ -16,5 +16,6 @@ private:
 	float angle;
 	glm::vec3 color;
 	float ambientIntensity;
+	glm::vec3 direction;
 
 };
