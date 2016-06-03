@@ -2,7 +2,6 @@
 
 #include <GL\glew.h>
 #include "Model.h"
-#include "Material.h"
 
 #include <Importer.hpp>      // C++ importer interface
 #include <scene.h>           // Output data structure
