@@ -15,7 +15,6 @@ class FreeTypeFont
 {
 public:
 	bool LoadFont(std::string file, int pxSize, int maxCharSupport = 128);
-	bool LoadSystemFont(std::string name, int pxSize, int maxCharSupport = 128);
 
 	int GetTextWidth(std::string text, int pxSize);
 

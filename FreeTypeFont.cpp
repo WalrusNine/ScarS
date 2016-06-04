@@ -5,7 +5,6 @@
 #include <glm\gtc\matrix_transform.hpp>
 #include <iostream>
 #include <algorithm>
-#include <Windows.h>
 
 using namespace std;
 
@@ -23,9 +22,6 @@ void FreeTypeFont::CreateChar(int index, GLubyte* data) {
 
 	int w = bitmap->width, h = bitmap->rows;
 
-	// Some characters when rendered, are somehow just bigger than our desired pixel size
-	// In this case, I just ignore them - another solution is to set iOneCharSquareSize in LoadFont function
-	// to twice the size (just multiply by 2 and you're safe)
 	if (w > oneCharSquareSize)
 		return;
 	if (h > oneCharSquareSize)
@@ -60,6 +56,7 @@ void FreeTypeFont::CreateChar(int index, GLubyte* data) {
 		glm::vec2(float(oneCharSquareSize), float(-advY[index]))
 	};
 	float oneStep = 1.0f / (float(CHARS_PER_TEXTUREROOT));
+
 	// Texture coordinates change depending on character index, which determines its position in the texture
 	glm::vec2 texQuad[] =
 	{
@@ -86,7 +83,6 @@ bool FreeTypeFont::LoadFont(string file, int pxSize, int maxCharSupport) {
 	loadedPixelSize = pxSize;
 	oneCharSquareSize = next_p2(loadedPixelSize);
 
-	// Neat trick - we need to calculate ceil(iMaxCharSupport/CHARS_PER_TEXTURE) and that calculation does it, more in article
 	int numTextures = (maxCharSupport + CHARS_PER_TEXTURE - 1) / CHARS_PER_TEXTURE;
 
 	// One texture will store up to CHARS_PER_TEXTURE characters
@@ -139,17 +135,6 @@ bool FreeTypeFont::LoadFont(string file, int pxSize, int maxCharSupport) {
 
 	return true;
 }
-
-
-bool FreeTypeFont::LoadSystemFont(string name, int pxSize, int maxCharSupport) {
-	char buf[512]; GetWindowsDirectory(buf, 512);
-	string path = buf;
-	path += "\\Fonts\\";
-	path += name;
-
-	return LoadFont(path, pxSize, maxCharSupport);
-}
-
 
 int FreeTypeFont::GetTextWidth(string text, int pxSize) {
 	int result = 0;

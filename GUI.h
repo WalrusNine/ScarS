@@ -16,6 +16,7 @@ public:
 	glm::mat4 GetOrthoMatrix();
 
 	void draw(bool shadow = false) override;
+	void update() override;
 
 private:
 

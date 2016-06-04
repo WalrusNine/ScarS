@@ -27,8 +27,14 @@ glm::mat4 GUI::GetOrthoMatrix() {
 	return orthoMatrix;
 }
 
+void GUI::update() {
+	if (InputController::getInputState(true, GLFW_KEY_P) == INPUT_RELEASED) {
+		enabled = !enabled;
+	}
+}
+
 void GUI::draw(bool shadow) {
-	if (!shadow) {
+	if (!shadow && enabled) {
 		Shader::shader->bind("font");
 		glDisable(GL_DEPTH_TEST);
 		Shader::shader->SetUniform("projectionMatrix", GetOrthoMatrix());

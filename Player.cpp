@@ -4,7 +4,7 @@
 
 
 Player::Player() : GameObject("player") {
-	movementSpeed = 20.0f;
+	movementSpeed = 15.0f;
 	steerAngle = 0.0f;
 	steerSpeed = 50.0f;
 	position = vec3(10, -9.7f, 20);
