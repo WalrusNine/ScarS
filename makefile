@@ -3,7 +3,7 @@ obj = $(src:.cpp=.o)
 exe = ScarS
 
 libs = assimp glew glfw3 freetype2
-includes = -Iopengl-wrappers/glm/glm -Iopengl-wrappers/freeimage $(shell pkg-config --cflags $(libs))
+includes = -Iopengl-wrappers/glm/glm $(shell pkg-config --cflags $(libs))
 
 build_dir = build
 objs = $(foreach o, $(obj), $(build_dir)/$(o))
@@ -26,3 +26,6 @@ $(build_dir)/%.o : %.cpp
 
 run :
 	@$(build_dir)/$(exe)
+
+clean :
+	$(RM) $(build_dir)/*
