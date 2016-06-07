@@ -1,6 +1,6 @@
 #include "ParticleSystem.h"
 
-#include <GL\glew.h>
+#include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -28,7 +28,7 @@ Params:	none
 Result:	Initializes all buffers and data on GPU
 for transform feedback particle system.
 
-/*---------------------------------------------*/
+\*---------------------------------------------*/
 
 bool ParticleSystem::InitalizeParticleSystem() {
 	if (initialized) return false;
@@ -75,7 +75,7 @@ Params:	fTimePassed - time passed since last frame
 
 Result:	Performs particle updating on GPU.
 
-/*---------------------------------------------*/
+\*---------------------------------------------*/
 
 float grandf(float fMin, float fAdd)
 {
@@ -146,7 +146,7 @@ Params:	none
 
 Result:	Performs particle rendering on GPU.
 
-/*---------------------------------------------*/
+\*---------------------------------------------*/
 
 void ParticleSystem::RenderParticles() {
 	if (!initialized) return;
@@ -234,7 +234,8 @@ void ParticleSystem::Update() {
 	// Particles
 	// Bind texture
 	Texture::GetTexture("particle")->Bind();
-	SetMatrices(&Camera::mainCamera->getProjectionMatrix(), Camera::mainCamera->getPosition(), Camera::mainCamera->getViewVector(), Camera::mainCamera->getUp());
+	auto projMatrix = Camera::mainCamera->getProjectionMatrix();
+	SetMatrices(&projMatrix, Camera::mainCamera->getPosition(), Camera::mainCamera->getViewVector(), Camera::mainCamera->getUp());
 	UpdateParticles(FPSController::getDeltaTime());
 	RenderParticles();
 }

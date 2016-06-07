@@ -1,8 +1,8 @@
 #include "FreeTypeFont.h"
 
-#include <GL\glew.h>
-#include <glm\glm.hpp>
-#include <glm\gtc\matrix_transform.hpp>
+#include <GL/glew.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 #include <algorithm>
 
@@ -226,7 +226,11 @@ void FreeTypeFont::PrintFormatted(int x, int y, int pxSize, char* text, ...) {
 	char buf[512];
 	va_list ap;
 	va_start(ap, text);
+#ifdef WIN32
 	vsprintf_s(buf, text, ap);
+#else
+	vsprintf(buf, text, ap);
+#endif
 	va_end(ap);
 	Print(buf, x, y, pxSize);
 }

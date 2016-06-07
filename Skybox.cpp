@@ -1,4 +1,4 @@
-#include <GL\glew.h>
+#include <GL/glew.h>
 #include "Skybox.h"
 #include "Camera.h"
 

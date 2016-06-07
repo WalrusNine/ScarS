@@ -17,7 +17,7 @@ Shader* Shader::shader;
 std::vector<std::pair<int, std::string>> Shader::programs;
 
 Shader::Shader() {
-	std::string dir = "data\\shaders\\";
+	std::string dir = "data/shaders/";
 
 	shaders.push_back({
 		new ShaderInfo(dir + "shader.vert", GL_VERTEX_SHADER, -1),

@@ -3,7 +3,7 @@
 
 GUI::GUI() : GameObject("gui") {
 	ftf = new FreeTypeFont();
-	bool rsc = ftf->LoadFont("data\\fonts\\arial.ttf", 32, 1024);
+	bool rsc = ftf->LoadFont("data/fonts/arial.ttf", 32, 1024);
 
 	ftf->SetShaderProgram(Shader::shader);
 
