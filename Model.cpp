@@ -1,6 +1,6 @@
 #pragma comment(lib, "assimp.lib")
 
-#include <GL\glew.h>
+#include <GL/glew.h>
 #include "Model.h"
 
 #include <Importer.hpp>      // C++ importer interface
@@ -72,6 +72,7 @@ bool Model::LoadModelFromFile(char* filepath) {
 
 	if (!scene)	{
 		//MessageBox(appMain.hWnd, "Couldn't load model ", "Error Importing Asset", MB_ICONERROR);
+		std::cerr << "Erro: modelo \"" << filepath << "\" não carregado =S" << std::endl;
 		return false;
 	}
 	
@@ -118,7 +119,13 @@ bool Model::LoadModelFromFile(char* filepath) {
 		if (material->GetTexture(aiTextureType_DIFFUSE, texIndex, &path) == AI_SUCCESS) {
 			std::string sDir = GetDirectoryPath(filepath);
 			std::string sTextureName = path.data;
+			for (auto & c : sTextureName) {
+				if (c == '\\') {
+					c = '/';
+				}
+			}
 			std::string sFullPath = sDir + sTextureName;
+			//std::cout << sTextureName << std::endl;
 			int iTexFound = -1;
 			int nTex = (int)Texture::textures.size();
 			for (int j = 0; j < nTex; ++j) {

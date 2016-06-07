@@ -196,7 +196,7 @@ Texture* Texture::CreateTexture(std::string filepath, int mag, int min, std::str
 
 	bool success = t->LoadTexture2D(filepath, generateMipMaps);
 	if (!success) {
-		std::cout << "Error: couldn't load texture " << filepath << std::endl;
+		std::cout << "[Texture::CreateTexture] Error: couldn't load texture " << filepath << std::endl;
 	}
 
 	t->SetFiltering(mag, min);

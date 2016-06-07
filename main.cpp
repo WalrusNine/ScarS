@@ -21,7 +21,9 @@ GLFWwindow* window;
 static void error_callback(int error, const char* description)
 {
 	fputs(description, stderr);
+#ifdef WIN32
 	_fgetchar();
+#endif
 }
 
 bool initialize(int argc, char* argv[]) {

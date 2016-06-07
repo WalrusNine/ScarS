@@ -22,7 +22,7 @@ a_iHeight - framebuffer height
 Result:	Creates a framebuffer and a texture to
 render to.
 
-/*---------------------------------------------*/
+\*---------------------------------------------*/
 
 bool FrameBuffer::CreateFrameBufferForDepthShadow(int width, int height) {
 	if (framebuffer != 0) {
@@ -70,7 +70,7 @@ Params:	none
 Result:	Adds depth renderbuffer to framebuffer,
 so rendering can perform depth testing.
 
-/*---------------------------------------------*/
+\*---------------------------------------------*/
 
 bool FrameBuffer::AddDepthBuffer() {
 	if (framebuffer == 0) return false;
@@ -95,7 +95,7 @@ viewport, default is true
 
 Result:	Binds this framebuffer.
 
-/*---------------------------------------------*/
+\*---------------------------------------------*/
 
 void FrameBuffer::BindFramebuffer(bool bSetFullViewport) {
 	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
@@ -112,7 +112,7 @@ bRegenMipMaps - regenerate mipmaps? (default false)
 Result:	Binds framebuffer texture, where renderings
 are stored.
 
-/*---------------------------------------------*/
+\*---------------------------------------------*/
 
 void FrameBuffer::BindFramebufferTexture(int iTextureUnit, bool bRegenMipMaps) {
 	framebufferTex->Bind(iTextureUnit);
@@ -130,7 +130,7 @@ Result:	Sets filtering of framebuffer texture,
 poor texturing here results in greater
 performance.
 
-/*---------------------------------------------*/
+\*---------------------------------------------*/
 
 void FrameBuffer::SetFramebufferTextureFiltering(int a_tfMagnification, int a_tfMinification) {
 	framebufferTex->SetFiltering(a_tfMagnification, a_tfMinification);
@@ -144,7 +144,7 @@ Params:	none
 
 Result:	Deletes framebuffer and frees memory.
 
-/*---------------------------------------------*/
+\*---------------------------------------------*/
 
 void FrameBuffer::DeleteFramebuffer() {
 	if (framebuffer) {
@@ -167,7 +167,7 @@ fNear, fFar - distance of near and far clipping plane
 
 Result:	Calculates projection matrix.
 
-/*---------------------------------------------*/
+\*---------------------------------------------*/
 
 glm::mat4 FrameBuffer::CalculateProjectionMatrix(float fov, float near, float far) {
 	return glm::perspective(fov, float(width) / float(height), near, far);
@@ -181,7 +181,7 @@ Params:	none
 
 Result:	Calculates ortho 2D projection matrix.
 
-/*---------------------------------------------*/
+\*---------------------------------------------*/
 
 glm::mat4 FrameBuffer::CalculateOrthoMatrix()
 {
@@ -196,7 +196,7 @@ Params:	none
 
 Result:	... They get something :D
 
-/*---------------------------------------------*/
+\*---------------------------------------------*/
 
 int FrameBuffer::GetWidth() {
 	return width;

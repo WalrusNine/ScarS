@@ -4,8 +4,8 @@
 /*
 	Pressed, Released, Held
 */
-#include <GL\glew.h>
-#include <GLFW\glfw3.h>
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 
 #define NUMBER_OF_KEYS 348
 
